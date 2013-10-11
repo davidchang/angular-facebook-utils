@@ -29,6 +29,9 @@
         padding-bottom: 25px;
         border-bottom: 1px solid #CCC;
       }
+      .container > section:last-child {
+        border-bottom: 0px solid #CCC;
+      }
     </style>
 </head>
   <body ng-app="facebookUtils">
@@ -79,6 +82,30 @@
           <h3 ng-hide='facebookResponse.status == "connected"'>Hello, Stranger!</h3>
         </section>
 
+        <section>
+          <h1>Code</h1>
+          <a href='https://github.com/davidchang/angular-facebook-utils'>https://github.com/davidchang/angular-facebook-utils</a>
+        </section>
+
+        <section>
+          <h1>Usage</h1>
+          <ol>
+            <li><code>bower install angular-facebook-utils</code></li>
+            <li>Add the <code>facebookUtils</code> module as a dependency of your Angular application</li>
+            <li>
+              <div>Include facebookUtils.min.js or facebookUtilsFirebase.min.js:</div>
+              <code>&lt;script src="angular-facebook-utils/src/facebookUtils.min.js&gt;&lt;/script&gt;</code>
+            </li>
+            <li>
+              <div>Include facebookUtils.css:</div>
+              <code>&lt;link rel="stylesheet" href="angular-facebook-utils/src/styles/facebookUtils.css&gt;&lt;/link&gt;</code>
+            </li>
+            <li>
+              <div>You'll have to add a channel.html for Facebook, containing the following contents:</div>
+              <code>&lt;script src="//connect.facebook.net/en_US/all.js"&gt;&lt;/script&gt;</code>
+            </li>
+          </ol>
+        </section>
 
         <section>
           <h1>Examples</h1>
@@ -131,7 +158,7 @@
         </section>
     </div>
 
-    <script src="src/bower_components/angular/angular.js"></script>
+    <script src="//code.angularjs.org/1.0.8/angular.min.js"></script>
     <script src="//cdn.firebase.com/v0/firebase.js"></script>
     <script src="//cdn.firebase.com/libs/angularfire/0.3.0/angularfire.min.js"></script>
 

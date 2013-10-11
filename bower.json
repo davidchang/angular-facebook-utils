@@ -5,9 +5,15 @@
     "**/.*",
     "node_modules",
     "src/bower_components",
-    "Gruntfile.js"
+    "Gruntfile.js",
+    "src/scripts/*.js",
+    "src/views/*.html"
   ],
   "dependencies": {
-    "angular": "~1.0.7"
-  }
+    "angular": "~1.0.8"
+  },
+  "main": [
+    "src/styles/*",
+    "src/*.js"
+  ]
 }

@@ -1,0 +1,176 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Angular Facebook Utils</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="src/styles/facebookUtils.css">
+    <style>
+      html, body {
+        margin: 20px;
+      }
+
+      body {
+          background: #fafafa;
+          font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+          color: #333;
+      }
+      .container > section {
+        margin-bottom: 25px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid #CCC;
+      }
+    </style>
+</head>
+  <body ng-app="facebookUtils">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!--[if lt IE 9]>
+      <script src="bower_components/es5-shim/es5-shim.js"></script>
+      <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+
+    <div class="container" ng-controller='ExampleCtrl'>
+
+        <section>
+          <h1>Angular Facebook Utils</h1>
+
+          <p>
+            Implementing Facebook Login in Meteor is as easy as:
+          </p>
+          <ol>
+            <li><code>mrt create new-app && cd new-app</code></li>
+            <li><code>mrt add accounts-ui && mrt add accounts-facebook</code></li>
+            <li class="ng-non-bindable">Add the line <code>{{loginButtons}}</code> to new-app.html</li>
+            <li><code>meteor</code> to run the server</li>
+            <li>Click the login button and it will give you instructions on configuration</li>
+          </ol>
+          <p>Meteor can do this, in part, because they own the entire stack. They can save and interpolate values from Mongo.</p>
+          <p>Let's make something as simple in Angular, with Firebase as our backend!</p>
+        </section>
+
+        <section>
+          <h1>Due Credit</h1>
+          <p>I took code and ideas from these 3 places, so they deserve more obvious credit:</p>
+          <p><a href='http://blog.brunoscopelliti.com/facebook-authentication-in-your-angularjs-web-app'>http://blog.brunoscopelliti.com/facebook-authentication-in-your-angularjs-web-app</a></p>
+          <p><a href='https://github.com/Terumi/AngularJS-Facebook-Login/blob/master/js/app.js'>https://github.com/Terumi/AngularJS-Facebook-Login/blob/master/js/app.js</a></p>
+          <p><a href='https://github.com/necolas/css3-social-signin-buttons'>https://github.com/necolas/css3-social-signin-buttons</a></p>
+        </section>
+
+        <section>
+          <h1>Final Product</h1>
+
+          <pre class='marginTop'>&lt;facebook-login firebase='https://davidchang.firebaseio.com/credentials' show-configure='true'&gt;&lt;/facebook-login&gt;</pre>
+
+          <facebook-login firebase='https://davidchang.firebaseio.com/credentials' show-configure='true'></facebook-login>
+
+          <h3 ng-show='facebookResponse.status == "connected"'>Hello, {{me.name}}!</h3>
+          <h3 ng-hide='facebookResponse.status == "connected"'>Hello, Stranger!</h3>
+        </section>
+
+
+        <section>
+          <h1>Examples</h1>
+          <section>
+            <h3>Use Firebase, No permissions:</h3>
+            <pre class='marginTop'>&lt;facebook-login firebase='https://davidchang.firebaseio.com/credentials'&gt;&lt;/facebook-login&gt;</pre>
+          </section>
+
+          <section>
+            <h3>Use Firebase, Request permissions:</h3>
+            <pre class='marginTop'>&lt;facebook-login firebase='https://davidchang.firebaseio.com/credentials' permissions='user_photos,user_likes'&gt;&lt;/facebook-login&gt;</pre>
+          </section>
+
+          <section>
+            <h3>Don't use Firebase, Request permissions:</h3>
+            <pre class='marginTop'>&lt;facebook-login permissions='user_photos,user_likes' app-id='335763733225618'&gt;&lt;/facebook-login&gt;</pre>
+          </section>
+
+          <section>
+            <h3>Use Firebase, Always show Configuration step, Request permissions:</h3>
+            <pre class='marginTop'>&lt;facebook-login firebase='https://davidchang.firebaseio.com/credentials' permissions='user_photos,user_likes' show-configure='true'&gt;&lt;/facebook-login&gt;</pre>
+          </section>
+        </section>
+
+        <section>
+          <h1>Options</h1>
+          <table class='table table-striped'>
+            <thead>
+              <tr><th>Attribute Name</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>firebase</td>
+                <td>Your firebase URL</td>
+              </tr>
+              <tr>
+                <td>app-id</td>
+                <td>Your Facebook ID (required if Firebase is disabled)</td>
+              </tr>
+              <tr>
+                <td>permissions</td>
+                <td>Comma separated String for the Facebook permissions you want to request</td>
+              </tr>
+              <tr>
+                <td>show-configure</td>
+                <td>Always show configuration step (only applicable if Firebase is enabled)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+    </div>
+
+    <script src="src/bower_components/angular/angular.js"></script>
+    <script src="//cdn.firebase.com/v0/firebase.js"></script>
+    <script src="//cdn.firebase.com/libs/angularfire/0.3.0/angularfire.min.js"></script>
+
+
+    <script src="src/facebookUtilsFirebase.min.js"></script>
+
+    <script>
+    'use strict';
+
+    angular.module('facebookUtils')
+      .controller('ExampleCtrl', function ($scope) {
+
+        var afterLogIn = function() {
+          FB.api('/me', function(response) {
+            $scope.$apply(function() {
+              $scope.me = response;
+            });
+          });
+        };
+
+        $scope.facebookResponse = {};
+
+        $scope.$on('fbLoginSuccess', function(name, response) {
+          $scope.facebookResponse = response;
+
+          if (response.status === 'connected') {
+            afterLogIn();
+          }
+        });
+
+        $scope.$on('fbLogoutSuccess', function() {
+
+          $scope.$apply(function() {
+            $scope.facebookResponse = {};
+          });
+
+        });
+      });
+  </script>
+
+</body>
+</html>

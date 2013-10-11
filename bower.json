@@ -1,0 +1,13 @@
+{
+  "name": "angularFacebookUtils",
+  "version": "1.0.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "src/bower_components",
+    "Gruntfile.js"
+  ],
+  "dependencies": {
+    "angular": "~1.0.7"
+  }
+}

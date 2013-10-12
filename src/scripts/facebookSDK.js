@@ -7,6 +7,7 @@ angular.module('facebookUtils')
 
     SDK.permissions = '';
     SDK.initialized = false;
+    SDK.channelFile = 'channel.html';
 
     SDK.prototype.wasInitialized = function() {
       return this.initialized;
@@ -14,6 +15,10 @@ angular.module('facebookUtils')
 
     SDK.prototype.setPermissions = function(permissions) {
       this.permissions = permissions || '';
+    };
+
+    SDK.prototype.setChannelFile = function(newFile) {
+      this.channelFile = newFile;
     };
 
     SDK.prototype.login = function() {
@@ -54,7 +59,7 @@ angular.module('facebookUtils')
       $window.fbAsyncInit = function() {
         FB.init({
           appId      : appId, // App ID
-          channelUrl : 'channel.html', // Channel File
+          channelUrl : _self.channelFile, // Channel File
           status     : true, // check login status
           cookie     : true // enable cookies to allow the server to access the session
         });

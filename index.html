@@ -13,7 +13,6 @@
 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 
-    <link rel="stylesheet" href="src/styles/facebookUtils.css">
     <style>
       html, body {
         margin: 20px;
@@ -91,19 +90,11 @@
           <h1>Usage</h1>
           <ol>
             <li><code>bower install angular-facebook-utils</code></li>
-            <li>Add the <code>facebookUtils</code> module as a dependency of your Angular application</li>
             <li>
               <div>Include facebookUtils.min.js or facebookUtilsFirebase.min.js:</div>
               <code>&lt;script src="angular-facebook-utils/src/facebookUtils.min.js&gt;&lt;/script&gt;</code>
             </li>
-            <li>
-              <div>Include facebookUtils.css:</div>
-              <code>&lt;link rel="stylesheet" href="angular-facebook-utils/src/styles/facebookUtils.css&gt;&lt;/link&gt;</code>
-            </li>
-            <li>
-              <div>You'll have to add a channel.html for Facebook, containing the following contents:</div>
-              <code>&lt;script src="//connect.facebook.net/en_US/all.js"&gt;&lt;/script&gt;</code>
-            </li>
+            <li>Add the <code>facebookUtils</code> module as a dependency of your Angular application</li>
           </ol>
         </section>
 
@@ -152,6 +143,10 @@
               <tr>
                 <td>show-configure</td>
                 <td>Always show configuration step (only applicable if Firebase is enabled)</td>
+              </tr>
+              <tr>
+                <td>channel-file</td>
+                <td>The filepath to your channel file (defaults to 'channel.html')</td>
               </tr>
             </tbody>
           </table>

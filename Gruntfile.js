@@ -13,7 +13,6 @@ module.exports = function(grunt) {
   ];
 
   grunt.initConfig({
-    jshintrc : grunt.file.readJSON('.jshintrc'),
     uglify: {
       'build-minify-non-firebase-version' : {
         options: {

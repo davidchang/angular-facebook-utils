@@ -166,20 +166,14 @@
     angular.module('facebookUtils')
       .controller('ExampleCtrl', function ($scope, facebookSDK) {
 
-        var afterLogIn = function() {
-          facebookSDK.api('/me').then(function(response) {
-            $scope.me = response;
-          });
-        };
-
         $scope.facebookResponse = {};
 
         $scope.$on('fbLoginSuccess', function(name, response) {
           $scope.facebookResponse = response;
 
-          if (response.status === 'connected') {
-            afterLogIn();
-          }
+          facebookSDK.api('/me').then(function(response) {
+            $scope.me = response;
+          });
         });
 
         $scope.$on('fbLogoutSuccess', function() {

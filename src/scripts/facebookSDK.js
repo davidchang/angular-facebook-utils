@@ -7,7 +7,7 @@ angular.module('facebookUtils')
 
     SDK.permissions = '';
     SDK.initialized = false;
-    SDK.channelFile = 'channel.html';
+    SDK.channelFile = 'bower_components/angular-facebook-utils/channel.html';
 
     SDK.prototype.wasInitialized = function() {
       return this.initialized;

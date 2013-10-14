@@ -23,12 +23,12 @@
           font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
           color: #333;
       }
-      .container > section {
+      #pageContainer > section {
         margin-bottom: 25px;
         padding-bottom: 25px;
         border-bottom: 1px solid #CCC;
       }
-      .container > section:last-child {
+      #pageContainer > section:last-child {
         border-bottom: 0px solid #CCC;
       }
     </style>
@@ -43,7 +43,7 @@
       <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
 
-    <div ng-controller='ExampleCtrl'>
+    <div id='pageContainer' ng-controller='ExampleCtrl'>
 
         <section>
           <h1>Angular Facebook Utils</h1>
@@ -74,7 +74,7 @@
 
           <pre class='marginTop'>&lt;facebook-login firebase='https://davidchang.firebaseio.com/credentials' show-configure='true'&gt;&lt;/facebook-login&gt;</pre>
 
-          <facebook-login firebase='https://davidchang.firebaseio.com/credentials' show-configure='true'></facebook-login>
+          <facebook-login firebase='https://davidchang.firebaseio.com/credentials' show-configure='true' channel-file='channel.html'></facebook-login>
 
           <h3 ng-show='facebookResponse.status == "connected"'>Hello, {{me.name}}!</h3>
           <h3 ng-hide='facebookResponse.status == "connected"'>Hello, Stranger!</h3>
@@ -91,9 +91,9 @@
             <li><code>bower install angular-facebook-utils</code></li>
             <li>
               <div>Include facebookUtils.min.js:</div>
-              <code>&lt;script src="angular-facebook-utils/src/facebookUtils.min.js&gt;&lt;/script&gt;</code>
+              <code>&lt;script src="bower_components/angular-facebook-utils/src/facebookUtils.min.js&gt;&lt;/script&gt;</code>
               <div>or facebookUtilsFirebase.min.js</div>
-              <code>&lt;script src="angular-facebook-utils/src/facebookUtilsFirebase.min.js&gt;&lt;/script&gt;</code>
+              <code>&lt;script src="bower_components/angular-facebook-utils/src/facebookUtilsFirebase.min.js&gt;&lt;/script&gt;</code>
             </li>
             <li>Add the <code>facebookUtils</code> module as a dependency of your Angular application</li>
             <li>Run your server</li>
@@ -153,6 +153,43 @@
               </tr>
             </tbody>
           </table>
+        </section>
+
+        <section>
+          <h1>Events</h1>
+          <div>Changes in log in status are broadcasted on the root scope along with corresponding data; so you'll just want to set up <code>$scope.$on('event name, like fbLoginSuccess')</code> listeners in your various controllers.
+          <table class='table table-striped'>
+            <thead>
+              <tr><th>Event Name</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>fbStatusChange</td>
+                <td>Change in status</td>
+              </tr>
+              <tr>
+                <td>fbLoginSuccess</td>
+                <td>Successfully logged in (will contain a userNotAuthorized property if the user did not authorize permissions</td>
+              </tr>
+              <tr>
+                <td>fbLoginFailure</td>
+                <td>Tried to log in, but an error occurred</td>
+              </tr>
+              <tr>
+                <td>fbLogoutSuccess</td>
+                <td>Successfully logged out</td>
+              </tr>
+              <tr>
+                <td>fbLogoutFailure</td>
+                <td>Tried to log out, but an error occurred</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h1>Me</h1>
+          <a href='http://davidandsuzi.com'>http://davidandsuzi.com</a>
         </section>
     </div>
 

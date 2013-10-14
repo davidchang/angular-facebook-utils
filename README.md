@@ -34,3 +34,7 @@ Usage
 5. Click the login button and it will give you configuration instructions
 
 Visit the nicer page at [http://davidchang.github.io/angular-facebook-utils/](http://davidchang.github.io/angular-facebook-utils/) for more details.
+
+Me
+--
+[http://davidandsuzi.com](http://davidandsuzi.com)

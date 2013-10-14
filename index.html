@@ -164,13 +164,11 @@
     'use strict';
 
     angular.module('facebookUtils')
-      .controller('ExampleCtrl', function ($scope) {
+      .controller('ExampleCtrl', function ($scope, facebookSDK) {
 
         var afterLogIn = function() {
-          FB.api('/me', function(response) {
-            $scope.$apply(function() {
-              $scope.me = response;
-            });
+          facebookSDK.api('/me').then(function(response) {
+            $scope.me = response;
           });
         };
 

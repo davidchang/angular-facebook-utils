@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('facebookUtils')
-  .service('facebookSDK', ['$window', '$rootScope', function($window, $rootScope) {
+  .service('facebookSDK', ['$window', '$rootScope', '$q', function($window, $rootScope, $q) {
 
     var SDK = function(){};
 
@@ -19,6 +19,20 @@ angular.module('facebookUtils')
 
     SDK.prototype.setChannelFile = function(newFile) {
       this.channelFile = newFile;
+    };
+
+    SDK.prototype.api = function() {
+      var deferred = $q.defer();
+      var args = [].splice.call(arguments,0);
+      args.push(function(response) {
+        $rootScope.$apply(function() {
+          deferred.resolve(response);
+        });
+      });
+
+      FB.api.apply(FB, args);
+
+      return deferred.promise;
     };
 
     SDK.prototype.login = function() {
@@ -69,12 +83,7 @@ angular.module('facebookUtils')
         }
 
         FB.Event.subscribe('auth.authResponseChange', function(response) {
-
           $rootScope.$broadcast('fbStatusChange', response);
-          if (response.status === 'connected') {
-            $rootScope.$broadcast('fbLoginSuccess', response);
-          }
-
         });
 
       };

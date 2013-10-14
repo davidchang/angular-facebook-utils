@@ -1,15 +1,15 @@
 Angular Facebook Utils
 ===================
 
+Visit the nicer page at [http://davidchang.github.io/angular-facebook-utils/](http://davidchang.github.io/angular-facebook-utils/) for more details.
+
 Implementing Facebook Login in Meteor is as easy as:
 
-1. mrt create new-app && cd new-app
-2. mrt add accounts-ui && mrt add accounts-facebook
-3. Add the line {{loginButtons}} to new-app.html
-4. meteor to run the server
+1. mrt add accounts-ui && mrt add accounts-facebook
+2. Add the line {{loginButtons}} to new-app.html
+3. Run meteor to start the server
+4. Click the login button and it will give you configuration instructions
 
-Click the login button and it will give you instructions on configuration
-Meteor can do this, in part, because they own the entire stack. They can save and interpolate values from Mongo.
 
 Let's make something as simple in Angular, with Firebase as our backend!
 
@@ -31,7 +31,7 @@ Usage
 2. Add the facebookUtils module as a dependency of your Angular application
 3. Include facebookUtils.min.js or facebookUtilsFirebase.min.js:
   <script src="angular-facebook-utils/src/facebookUtils.min.js></script>
-4. Include facebookUtils.css:
-  <link rel="stylesheet" href="angular-facebook-utils/src/styles/facebookUtils.css></link>
-5. You'll have to add a channel.html for Facebook, containing the following contents:
-  <script src="//connect.facebook.net/en_US/all.js"></script>
+4. Run your server
+5. Click the login button and it will give you configuration instructions
+
+Visit the nicer page at [http://davidchang.github.io/angular-facebook-utils/](http://davidchang.github.io/angular-facebook-utils/) for more details.

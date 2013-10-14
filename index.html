@@ -13,7 +13,6 @@
 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 
-    <link rel="stylesheet" href="src/styles/facebookUtils.css">
     <style>
       html, body {
         margin: 20px;
@@ -44,7 +43,7 @@
       <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
 
-    <div class="container" ng-controller='ExampleCtrl'>
+    <div ng-controller='ExampleCtrl'>
 
         <section>
           <h1>Angular Facebook Utils</h1>
@@ -53,11 +52,10 @@
             Implementing Facebook Login in Meteor is as easy as:
           </p>
           <ol>
-            <li><code>mrt create new-app && cd new-app</code></li>
             <li><code>mrt add accounts-ui && mrt add accounts-facebook</code></li>
             <li class="ng-non-bindable">Add the line <code>{{loginButtons}}</code> to new-app.html</li>
-            <li><code>meteor</code> to run the server</li>
-            <li>Click the login button and it will give you instructions on configuration</li>
+            <li>Run <code>meteor</code> to start the server</li>
+            <li>Click the login button and it will give you configuration instructions</li>
           </ol>
           <p>Meteor can do this, in part, because they own the entire stack. They can save and interpolate values from Mongo.</p>
           <p>Let's make something as simple in Angular, with Firebase as our backend!</p>
@@ -91,19 +89,15 @@
           <h1>Usage</h1>
           <ol>
             <li><code>bower install angular-facebook-utils</code></li>
-            <li>Add the <code>facebookUtils</code> module as a dependency of your Angular application</li>
             <li>
-              <div>Include facebookUtils.min.js or facebookUtilsFirebase.min.js:</div>
+              <div>Include facebookUtils.min.js:</div>
               <code>&lt;script src="angular-facebook-utils/src/facebookUtils.min.js&gt;&lt;/script&gt;</code>
+              <div>or facebookUtilsFirebase.min.js</div>
+              <code>&lt;script src="angular-facebook-utils/src/facebookUtilsFirebase.min.js&gt;&lt;/script&gt;</code>
             </li>
-            <li>
-              <div>Include facebookUtils.css:</div>
-              <code>&lt;link rel="stylesheet" href="angular-facebook-utils/src/styles/facebookUtils.css&gt;&lt;/link&gt;</code>
-            </li>
-            <li>
-              <div>You'll have to add a channel.html for Facebook, containing the following contents:</div>
-              <code>&lt;script src="//connect.facebook.net/en_US/all.js"&gt;&lt;/script&gt;</code>
-            </li>
+            <li>Add the <code>facebookUtils</code> module as a dependency of your Angular application</li>
+            <li>Run your server</li>
+            <li>Click the login button and it will give you configuration instructions</li>
           </ol>
         </section>
 
@@ -153,6 +147,10 @@
                 <td>show-configure</td>
                 <td>Always show configuration step (only applicable if Firebase is enabled)</td>
               </tr>
+              <tr>
+                <td>channel-file</td>
+                <td>The filepath to your channel file (defaults to 'channel.html')</td>
+              </tr>
             </tbody>
           </table>
         </section>
@@ -169,24 +167,16 @@
     'use strict';
 
     angular.module('facebookUtils')
-      .controller('ExampleCtrl', function ($scope) {
-
-        var afterLogIn = function() {
-          FB.api('/me', function(response) {
-            $scope.$apply(function() {
-              $scope.me = response;
-            });
-          });
-        };
+      .controller('ExampleCtrl', function ($scope, facebookSDK) {
 
         $scope.facebookResponse = {};
 
         $scope.$on('fbLoginSuccess', function(name, response) {
           $scope.facebookResponse = response;
 
-          if (response.status === 'connected') {
-            afterLogIn();
-          }
+          facebookSDK.api('/me').then(function(response) {
+            $scope.me = response;
+          });
         });
 
         $scope.$on('fbLogoutSuccess', function() {

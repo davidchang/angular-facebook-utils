@@ -43,7 +43,7 @@
       <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
 
-    <div class="container" ng-controller='ExampleCtrl'>
+    <div ng-controller='ExampleCtrl'>
 
         <section>
           <h1>Angular Facebook Utils</h1>
@@ -52,11 +52,10 @@
             Implementing Facebook Login in Meteor is as easy as:
           </p>
           <ol>
-            <li><code>mrt create new-app && cd new-app</code></li>
             <li><code>mrt add accounts-ui && mrt add accounts-facebook</code></li>
             <li class="ng-non-bindable">Add the line <code>{{loginButtons}}</code> to new-app.html</li>
-            <li><code>meteor</code> to run the server</li>
-            <li>Click the login button and it will give you instructions on configuration</li>
+            <li>Run <code>meteor</code> to start the server</li>
+            <li>Click the login button and it will give you configuration instructions</li>
           </ol>
           <p>Meteor can do this, in part, because they own the entire stack. They can save and interpolate values from Mongo.</p>
           <p>Let's make something as simple in Angular, with Firebase as our backend!</p>
@@ -91,10 +90,14 @@
           <ol>
             <li><code>bower install angular-facebook-utils</code></li>
             <li>
-              <div>Include facebookUtils.min.js or facebookUtilsFirebase.min.js:</div>
+              <div>Include facebookUtils.min.js:</div>
               <code>&lt;script src="angular-facebook-utils/src/facebookUtils.min.js&gt;&lt;/script&gt;</code>
+              <div>or facebookUtilsFirebase.min.js</div>
+              <code>&lt;script src="angular-facebook-utils/src/facebookUtilsFirebase.min.js&gt;&lt;/script&gt;</code>
             </li>
             <li>Add the <code>facebookUtils</code> module as a dependency of your Angular application</li>
+            <li>Run your server</li>
+            <li>Click the login button and it will give you configuration instructions</li>
           </ol>
         </section>
 

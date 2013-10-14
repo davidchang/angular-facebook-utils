@@ -29,8 +29,7 @@ Usage
 
 1. ``bower install angular-facebook-utils``
 2. Add the facebookUtils module as a dependency of your Angular application
-3. Include facebookUtils.min.js or facebookUtilsFirebase.min.js:
-  <script src="angular-facebook-utils/src/facebookUtils.min.js></script>
+3. Include facebookUtils.min.js or facebookUtilsFirebase.min.js.
 4. Run your server
 5. Click the login button and it will give you configuration instructions
 

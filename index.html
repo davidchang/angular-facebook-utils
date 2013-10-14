@@ -74,7 +74,7 @@
 
           <pre class='marginTop'>&lt;facebook-login firebase='https://davidchang.firebaseio.com/credentials' show-configure='true'&gt;&lt;/facebook-login&gt;</pre>
 
-          <facebook-login firebase='https://davidchang.firebaseio.com/credentials' show-configure='true'></facebook-login>
+          <facebook-login firebase='https://davidchang.firebaseio.com/credentials' show-configure='true' channel-file='channel.html'></facebook-login>
 
           <h3 ng-show='facebookResponse.status == "connected"'>Hello, {{me.name}}!</h3>
           <h3 ng-hide='facebookResponse.status == "connected"'>Hello, Stranger!</h3>
@@ -91,9 +91,9 @@
             <li><code>bower install angular-facebook-utils</code></li>
             <li>
               <div>Include facebookUtils.min.js:</div>
-              <code>&lt;script src="angular-facebook-utils/src/facebookUtils.min.js&gt;&lt;/script&gt;</code>
+              <code>&lt;script src="bower_components/angular-facebook-utils/src/facebookUtils.min.js&gt;&lt;/script&gt;</code>
               <div>or facebookUtilsFirebase.min.js</div>
-              <code>&lt;script src="angular-facebook-utils/src/facebookUtilsFirebase.min.js&gt;&lt;/script&gt;</code>
+              <code>&lt;script src="bower_components/angular-facebook-utils/src/facebookUtilsFirebase.min.js&gt;&lt;/script&gt;</code>
             </li>
             <li>Add the <code>facebookUtils</code> module as a dependency of your Angular application</li>
             <li>Run your server</li>

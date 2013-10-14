@@ -1,12 +1,13 @@
 'use strict';
 
 angular.module('facebookUtils')
-  .service('facebookSDK', ['$window', '$rootScope', function($window, $rootScope) {
+  .service('facebookSDK', ['$window', '$rootScope', '$q', function($window, $rootScope, $q) {
 
     var SDK = function(){};
 
     SDK.permissions = '';
     SDK.initialized = false;
+    SDK.channelFile = 'channel.html';
 
     SDK.prototype.wasInitialized = function() {
       return this.initialized;
@@ -14,6 +15,24 @@ angular.module('facebookUtils')
 
     SDK.prototype.setPermissions = function(permissions) {
       this.permissions = permissions || '';
+    };
+
+    SDK.prototype.setChannelFile = function(newFile) {
+      this.channelFile = newFile;
+    };
+
+    SDK.prototype.api = function() {
+      var deferred = $q.defer();
+      var args = [].splice.call(arguments,0);
+      args.push(function(response) {
+        $rootScope.$apply(function() {
+          deferred.resolve(response);
+        });
+      });
+
+      FB.api.apply(FB, args);
+
+      return deferred.promise;
     };
 
     SDK.prototype.login = function() {
@@ -54,7 +73,7 @@ angular.module('facebookUtils')
       $window.fbAsyncInit = function() {
         FB.init({
           appId      : appId, // App ID
-          channelUrl : 'channel.html', // Channel File
+          channelUrl : _self.channelFile, // Channel File
           status     : true, // check login status
           cookie     : true // enable cookies to allow the server to access the session
         });
@@ -64,12 +83,7 @@ angular.module('facebookUtils')
         }
 
         FB.Event.subscribe('auth.authResponseChange', function(response) {
-
           $rootScope.$broadcast('fbStatusChange', response);
-          if (response.status === 'connected') {
-            $rootScope.$broadcast('fbLoginSuccess', response);
-          }
-
         });
 
       };

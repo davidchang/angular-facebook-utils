@@ -2,18 +2,19 @@ module.exports = function(grunt) {
 
   var nonFirebaseFiles = [
     'src/scripts/app.js',
+    'src/views/facebookLoginPartial.js',
     'src/scripts/facebookSDK.js',
     'src/scripts/facebookLogin.js'
   ];
 
   var firebaseFiles = [
     'src/scripts/appFirebase.js',
+    'src/views/facebookLoginPartialFirebase.js',
     'src/scripts/facebookSDK.js',
     'src/scripts/facebookLoginFirebase.js'
   ];
 
   grunt.initConfig({
-    jshintrc : grunt.file.readJSON('.jshintrc'),
     uglify: {
       'build-minify-non-firebase-version' : {
         options: {
@@ -61,12 +62,48 @@ module.exports = function(grunt) {
           'src/facebookUtilsFirebase.js' : firebaseFiles
         }
       }
+    },
+    ngtemplates: {
+      'nonfirebase' : {
+        src: 'src/views/facebookLoginPartial.html',
+        dest: 'src/views/facebookLoginPartial.js',
+        options: {
+          htmlmin: {
+            collapseBooleanAttributes:      true,
+            collapseWhitespace:             true,
+            removeAttributeQuotes:          true,
+            removeComments:                 true, // Only if you don't use comment directives!
+            removeEmptyAttributes:          true,
+            removeRedundantAttributes:      true,
+            removeScriptTypeAttributes:     true,
+            removeStyleLinkTypeAttributes:  true
+          },
+          module: 'angular-facebook-utils'
+        }
+      },
+      'firebase' : {
+        src: 'src/views/facebookLoginPartialFirebase.html',
+        dest: 'src/views/facebookLoginPartialFirebase.js',
+        options: {
+          htmlmin: {
+            collapseBooleanAttributes:      true,
+            collapseWhitespace:             true,
+            removeAttributeQuotes:          true,
+            removeComments:                 true, // Only if you don't use comment directives!
+            removeEmptyAttributes:          true,
+            removeRedundantAttributes:      true,
+            removeScriptTypeAttributes:     true,
+            removeStyleLinkTypeAttributes:  true
+          },
+          module: 'facebookUtils'
+        }
+      }
     }
   });
 
-
+  grunt.loadNpmTasks('grunt-angular-templates');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
-  grunt.registerTask('default', ['uglify']);
-  grunt.registerTask('build', ['uglify']);
+  grunt.registerTask('default', ['build']);
+  grunt.registerTask('build', ['ngtemplates', 'uglify']);
 };

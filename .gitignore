@@ -2,3 +2,4 @@ node_modules
 .tmp
 .sass-cache
 src/bower_components
+src/views/*.js

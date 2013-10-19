@@ -1,82 +1,91 @@
 'use strict';
 
 angular.module('facebookUtils')
-  .directive('facebookLogin', ['angularFire', 'facebookSDK', function (angularFire, facebookSDK) {
-    return {
-      templateUrl: 'src/views/facebookLoginPartialFirebase.html',
-      restrict: 'E',
-      replace: true,
-      scope: { },
-      link: function postLink($scope, $element, $attrs) {
+  .directive('facebookLogin', [
+    'angularFire', 'facebookSDK', 'facebookAppID', 'facebookFirebaseURL',
+    function (angularFire, facebookSDK, facebookAppID, facebookFirebaseURL) {
+      return {
+        templateUrl: 'src/views/facebookLoginPartialFirebase.html',
+        restrict: 'E',
+        replace: true,
+        scope: { },
+        link: function postLink($scope, $element, $attrs) {
 
-        facebookSDK.setPermissions($attrs.permissions);
-
-        var needToConfigure = $attrs.showConfigure;
-
-        $scope.signInOrConfigure = function() {
-          if (facebookSDK.wasInitialized()) {
-            if (!$scope.connected) {
-              facebookSDK.login();
-            } else {
-              facebookSDK.logout();
-            }
-          } else {
-            needToConfigure = true;
-            $scope.configureLocation = window.location.origin;
-            $scope.showConfigure = true;
+          if ($attrs.permissions) {
+            facebookSDK.setPermissions($attrs.permissions);
           }
-        }
+          if ($attrs.channelFile) {
+            facebookSDK.setChannelFile($attrs.channelFile);
+          }
 
-        $scope.$on('fbLoginSuccess', function() {
-          $scope.connected = true;
-        });
+          var needToConfigure = $attrs.showConfigure;
 
-        $scope.$on('fbLogoutSuccess', function() {
+          $scope.signInOrConfigure = function() {
+            if (facebookSDK.wasInitialized()) {
+              if (!$scope.connected) {
+                facebookSDK.login();
+              } else {
+                facebookSDK.logout();
+              }
+            } else {
+              needToConfigure = true;
+              $scope.configureLocation = window.location.origin;
+              $scope.showConfigure = true;
+            }
+          }
 
-          $scope.$apply(function() {
-            $scope.connected = false;
+          $scope.$on('fbLoginSuccess', function() {
+            $scope.connected = true;
           });
 
-        });
+          $scope.$on('fbLogoutSuccess', function() {
 
-        if ($attrs.appId && !needToConfigure) {
+            $scope.$apply(function() {
+              $scope.connected = false;
+            });
 
-          facebookSDK.initializeFb($attrs.appId);
+          });
 
-        } else {
+          if (($attrs.appId || facebookAppID) && !needToConfigure) {
 
-          var firebaseUrl = $attrs.firebase;
+            facebookSDK.initializeFb($attrs.appId || facebookAppID);
 
-          if (!firebaseUrl) {
-            throw new Error('You\'ll need to either specify a Firebase URL or provide app-id attribute on the directive');
-          }
+          } else {
 
-          var ref = new Firebase(firebaseUrl);
+            var firebaseUrl = $attrs.firebase || facebookFirebaseURL;
 
-          $scope.facebook = {
-            appId : '',
-          };
-
-          angularFire(ref, $scope, 'facebook');
-
-          $scope.$watch('facebook', function(val) {
-            if (!needToConfigure && val.appId) {
-              facebookSDK.initializeFb(val.appId);
-            } else if (needToConfigure) {
-              $scope.newAppId = $scope.facebook.appId;
+            if (!firebaseUrl) {
+              throw new Error('You\'ll need to either specify a Firebase URL via attribute or application value or provide the app-id attribute on the directive');
             }
-          }, true);
 
-          $scope.saveConfiguration = function() {
-            if ($scope.newAppId) {
-              $scope.facebook.appId = $scope.newAppId;
+            var ref = new Firebase(firebaseUrl);
 
-              facebookSDK.initializeFb($scope.newAppId, true);
-              $scope.showConfigure = false;
+            $scope.facebook = {
+              appId : '',
+            };
+
+            angularFire(ref, $scope, 'facebook');
+
+            $scope.$watch('facebook', function(val) {
+              if (!needToConfigure && val.appId) {
+                facebookSDK.initializeFb(val.appId);
+              } else if (needToConfigure) {
+                $scope.newAppId = $scope.facebook.appId;
+              }
+            }, true);
+
+            $scope.saveConfiguration = function() {
+              if ($scope.newAppId) {
+                $scope.facebook.appId = $scope.newAppId;
+
+                facebookSDK.initializeFb($scope.newAppId, true);
+                $scope.showConfigure = false;
+              }
             }
-          }
 
+          }
         }
-      }
-    };
-  }]);
+      };
+    }
+  ]
+);

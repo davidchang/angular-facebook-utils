@@ -9,8 +9,9 @@ angular.module('facebookUtils')
       scope: { },
       link: function postLink($scope, $element, $attrs) {
 
-        facebookSDK.setPermissions($attrs.permissions);
-
+        if ($attrs.permissions) {
+          facebookSDK.setPermissions($attrs.permissions);
+        }
         if ($attrs.channelFile) {
           facebookSDK.setChannelFile($attrs.channelFile);
         }
@@ -35,10 +36,7 @@ angular.module('facebookUtils')
 
         });
 
-        if (!$attrs.appId) {
-          throw new Error('You must provide an app-id for the facebook-login directive to work!');
-        }
-
+        //if $attrs.appId is empty, fall back to the value facebookAppID
         facebookSDK.initializeFb($attrs.appId);
       }
     };

@@ -23,17 +23,9 @@
           font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
           color: #333;
       }
-      #pageContainer > section {
-        margin-bottom: 25px;
-        padding-bottom: 25px;
-        border-bottom: 1px solid #CCC;
-      }
-      #pageContainer > section:last-child {
-        border-bottom: 0px solid #CCC;
-      }
     </style>
 </head>
-  <body ng-app="facebookUtils">
+  <body ng-app="facebookUtilsDemo">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -43,188 +35,17 @@
       <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
 
-    <div id='pageContainer' ng-controller='ExampleCtrl'>
-
-        <section>
-          <h1>Angular Facebook Utils</h1>
-
-          <p>
-            Implementing Facebook Login in Meteor is as easy as:
-          </p>
-          <ol>
-            <li><code>mrt add accounts-ui && mrt add accounts-facebook</code></li>
-            <li class="ng-non-bindable">Add the line <code>{{loginButtons}}</code> to new-app.html</li>
-            <li>Run <code>meteor</code> to start the server</li>
-            <li>Click the login button and it will give you configuration instructions</li>
-          </ol>
-          <p>Meteor can do this, in part, because they own the entire stack. They can save and interpolate values from Mongo.</p>
-          <p>Let's make something as simple in Angular, with Firebase as our backend!</p>
-        </section>
-
-        <section>
-          <h1>Due Credit</h1>
-          <p>I took code and ideas from these 3 places, so they deserve more obvious credit:</p>
-          <p><a href='http://blog.brunoscopelliti.com/facebook-authentication-in-your-angularjs-web-app'>http://blog.brunoscopelliti.com/facebook-authentication-in-your-angularjs-web-app</a></p>
-          <p><a href='https://github.com/Terumi/AngularJS-Facebook-Login/blob/master/js/app.js'>https://github.com/Terumi/AngularJS-Facebook-Login/blob/master/js/app.js</a></p>
-          <p><a href='https://github.com/necolas/css3-social-signin-buttons'>https://github.com/necolas/css3-social-signin-buttons</a></p>
-        </section>
-
-        <section>
-          <h1>Final Product</h1>
-
-          <pre class='marginTop'>&lt;facebook-login firebase='https://davidchang.firebaseio.com/credentials' show-configure='true'&gt;&lt;/facebook-login&gt;</pre>
-
-          <facebook-login firebase='https://davidchang.firebaseio.com/credentials' show-configure='true' channel-file='channel.html'></facebook-login>
-
-          <h3 ng-show='facebookResponse.status == "connected"'>Hello, {{me.name}}!</h3>
-          <h3 ng-hide='facebookResponse.status == "connected"'>Hello, Stranger!</h3>
-        </section>
-
-        <section>
-          <h1>Code</h1>
-          <a href='https://github.com/davidchang/angular-facebook-utils'>https://github.com/davidchang/angular-facebook-utils</a>
-        </section>
-
-        <section>
-          <h1>Usage</h1>
-          <ol>
-            <li><code>bower install angular-facebook-utils</code></li>
-            <li>
-              <div>Include facebookUtils.min.js:</div>
-              <code>&lt;script src="bower_components/angular-facebook-utils/src/facebookUtils.min.js&gt;&lt;/script&gt;</code>
-              <div>or facebookUtilsFirebase.min.js</div>
-              <code>&lt;script src="bower_components/angular-facebook-utils/src/facebookUtilsFirebase.min.js&gt;&lt;/script&gt;</code>
-            </li>
-            <li>Add the <code>facebookUtils</code> module as a dependency of your Angular application</li>
-            <li>Run your server</li>
-            <li>Click the login button and it will give you configuration instructions</li>
-          </ol>
-        </section>
-
-        <section>
-          <h1>Examples</h1>
-          <section>
-            <h3>Use Firebase, No permissions:</h3>
-            <pre class='marginTop'>&lt;facebook-login firebase='https://davidchang.firebaseio.com/credentials'&gt;&lt;/facebook-login&gt;</pre>
-          </section>
-
-          <section>
-            <h3>Use Firebase, Request permissions:</h3>
-            <pre class='marginTop'>&lt;facebook-login firebase='https://davidchang.firebaseio.com/credentials' permissions='user_photos,user_likes'&gt;&lt;/facebook-login&gt;</pre>
-          </section>
-
-          <section>
-            <h3>Don't use Firebase, Request permissions:</h3>
-            <pre class='marginTop'>&lt;facebook-login permissions='user_photos,user_likes' app-id='335763733225618'&gt;&lt;/facebook-login&gt;</pre>
-          </section>
-
-          <section>
-            <h3>Use Firebase, Always show Configuration step, Request permissions:</h3>
-            <pre class='marginTop'>&lt;facebook-login firebase='https://davidchang.firebaseio.com/credentials' permissions='user_photos,user_likes' show-configure='true'&gt;&lt;/facebook-login&gt;</pre>
-          </section>
-        </section>
-
-        <section>
-          <h1>Options</h1>
-          <table class='table table-striped'>
-            <thead>
-              <tr><th>Attribute Name</th><th>Description</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>firebase</td>
-                <td>Your firebase URL</td>
-              </tr>
-              <tr>
-                <td>app-id</td>
-                <td>Your Facebook ID (required if Firebase is disabled)</td>
-              </tr>
-              <tr>
-                <td>permissions</td>
-                <td>Comma separated String for the Facebook permissions you want to request</td>
-              </tr>
-              <tr>
-                <td>show-configure</td>
-                <td>Always show configuration step (only applicable if Firebase is enabled)</td>
-              </tr>
-              <tr>
-                <td>channel-file</td>
-                <td>The filepath to your channel file (defaults to 'channel.html')</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <section>
-          <h1>Events</h1>
-          <div>Changes in log in status are broadcasted on the root scope along with corresponding data; so you'll just want to set up <code>$scope.$on('event name, like fbLoginSuccess')</code> listeners in your various controllers.
-          <table class='table table-striped'>
-            <thead>
-              <tr><th>Event Name</th><th>Description</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>fbStatusChange</td>
-                <td>Change in status</td>
-              </tr>
-              <tr>
-                <td>fbLoginSuccess</td>
-                <td>Successfully logged in (will contain a userNotAuthorized property if the user did not authorize permissions</td>
-              </tr>
-              <tr>
-                <td>fbLoginFailure</td>
-                <td>Tried to log in, but an error occurred</td>
-              </tr>
-              <tr>
-                <td>fbLogoutSuccess</td>
-                <td>Successfully logged out</td>
-              </tr>
-              <tr>
-                <td>fbLogoutFailure</td>
-                <td>Tried to log out, but an error occurred</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <section>
-          <h1>Me</h1>
-          <a href='http://davidandsuzi.com'>http://davidandsuzi.com</a>
-        </section>
-    </div>
+    <div id='pageContainer' ng-view></div>
 
     <script src="//code.angularjs.org/1.0.8/angular.min.js"></script>
     <script src="//cdn.firebase.com/v0/firebase.js"></script>
     <script src="//cdn.firebase.com/libs/angularfire/0.3.0/angularfire.min.js"></script>
 
-
     <script src="src/facebookUtilsFirebase.min.js"></script>
 
-    <script>
-    'use strict';
-
-    angular.module('facebookUtils')
-      .controller('ExampleCtrl', function ($scope, facebookSDK) {
-
-        $scope.facebookResponse = {};
-
-        $scope.$on('fbLoginSuccess', function(name, response) {
-          $scope.facebookResponse = response;
-
-          facebookSDK.api('/me').then(function(response) {
-            $scope.me = response;
-          });
-        });
-
-        $scope.$on('fbLogoutSuccess', function() {
-
-          $scope.$apply(function() {
-            $scope.facebookResponse = {};
-          });
-
-        });
-      });
-  </script>
+    <!-- DEMO -->
+    <script src="demo/demoApp.js"></script>
+    <script src="demo/controllers/mainCtrl.js"></script>
 
 </body>
 </html>

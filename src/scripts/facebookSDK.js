@@ -8,8 +8,10 @@ angular.module('facebookUtils')
       var SDK = function(){};
 
       SDK.permissions = facebookPermissions;
-      SDK.initialized = false;
       SDK.channelFile = facebookChannelFile;
+
+      SDK.initialized = false;
+      SDK.loggedIn = false;
 
       SDK.prototype.wasInitialized = function() {
         return this.initialized;
@@ -46,11 +48,13 @@ angular.module('facebookUtils')
         FB.getLoginStatus(function(response) {
           if (response.status === 'connected') {
             $rootScope.$broadcast('fbLoginSuccess', response);
+            _self.loggedIn = true;
           } else {
             FB.login(function(response) {
               if (response.authResponse) {
                 response.userNotAuthorized = true;
                 $rootScope.$broadcast('fbLoginSuccess', response);
+                _self.loggedIn = false;
               } else {
                 $rootScope.$broadcast('fbLoginFailure');
               }
@@ -63,6 +67,7 @@ angular.module('facebookUtils')
         FB.logout(function(response) {
           if (response) {
             $rootScope.$broadcast('fbLogoutSuccess');
+            _self.loggedIn = false;
           } else {
             $rootScope.$broadcast('fbLogoutFailure');
           }

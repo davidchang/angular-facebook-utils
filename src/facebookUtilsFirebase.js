@@ -1,7 +1,21 @@
 (function(exports, global) {
     global["true"] = exports;
     "use strict";
-    var application = angular.module("facebookUtils", [ "firebase" ]).value("facebookFirebaseURL", "").value("facebookAppID", "").value("facebookPermissions", "").value("facebookChannelFile", "bower_components/angular-facebook-utils/channel.html").value("facebookRoutingEnabled", false).value("facebookLoginPath", "/").run([ "facebookRoutingEnabled", "facebookLoginPath", "$rootScope", "$location", "facebookSDK", function(facebookRoutingEnabled, facebookLoginPath, $rootScope, $location, facebookSDK) {
+    var application = angular.module("facebookUtils", [ "firebase" ]).value("facebookFirebaseURL", "").value("facebookAppID", "").value("facebookPermissions", "").value("facebookChannelFile", "bower_components/angular-facebook-utils/channel.html").value("facebookRoutingEnabled", false).value("facebookLoginPath", "/").run([ "facebookRoutingEnabled", "facebookLoginPath", "$rootScope", "$location", "facebookSDK", "facebookAppID", "facebookFirebaseURL", "angularFireCollection", function(facebookRoutingEnabled, facebookLoginPath, $rootScope, $location, facebookSDK, facebookAppID, facebookFirebaseURL, angularFireCollection) {
+        if (facebookAppID) {
+            facebookSDK.initializeFb(facebookAppID);
+        } else if (facebookFirebaseURL) {
+            angularFireCollection(new Firebase(facebookFirebaseURL), function(snapshot) {
+                var id = snapshot.val().appId;
+                if (id) {
+                    facebookSDK.initializeFb(id);
+                    setTimeout(function() {
+                        console.log("alert!");
+                        facebookSDK.initializeFb("335763733225618");
+                    }, 5e3);
+                }
+            });
+        }
         if (facebookRoutingEnabled) {
             $rootScope.$on("$routeChangeStart", function(event, next, current) {
                 if (next.needAuth && !facebookSDK.loggedIn) {

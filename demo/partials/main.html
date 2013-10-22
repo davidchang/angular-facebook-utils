@@ -38,7 +38,7 @@
 
   <pre class='marginTop'>&lt;facebook-login firebase='https://davidchang.firebaseio.com/credentials' show-configure='true'&gt;&lt;/facebook-login&gt;</pre>
 
-  <facebook-login firebase='https://davidchang.firebaseio.com/credentials' show-configure='true' channel-file='channel.html'></facebook-login>
+  <facebook-login show-configure='true'></facebook-login>
 
   <h3 ng-show='facebookResponse.status == "connected"'>Hello, {{loggedInUser.name}}!</h3>
   <h3 ng-hide='facebookResponse.status == "connected"'>Hello, Stranger!</h3>

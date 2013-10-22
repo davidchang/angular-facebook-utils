@@ -1,5 +1,7 @@
 angular.module('facebookUtilsDemo', ['facebookUtils'])
   .value('facebookRoutingEnabled', true)
+  .value('facebookFirebaseURL', 'https://davidchang.firebaseio.com/credentials')
+  .value('facebookChannelFile', 'channel.html')
   .config(function($routeProvider) {
     $routeProvider.when('/', {
       templateUrl: 'demo/partials/main.html',

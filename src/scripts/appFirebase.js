@@ -13,12 +13,36 @@ var application = angular.module('facebookUtils', ['firebase'])
     '$rootScope',
     '$location',
     'facebookSDK',
+    'facebookAppID',
+    'facebookFirebaseURL',
+    'angularFireCollection',
     function(
       facebookRoutingEnabled,
       facebookLoginPath,
       $rootScope,
       $location,
-      facebookSDK) {
+      facebookSDK,
+      facebookAppID,
+      facebookFirebaseURL,
+      angularFireCollection) {
+        //handle initialization
+        if (facebookAppID) {
+          facebookSDK.initializeFb(facebookAppID);
+        } else if (facebookFirebaseURL) {
+          angularFireCollection(new Firebase(facebookFirebaseURL), function(snapshot) {
+            var id = snapshot.val().appId;
+            if (id) {
+              facebookSDK.initializeFb(id);
+
+              setTimeout(function() {
+                console.log('alert!');
+                facebookSDK.initializeFb('335763733225618');
+              }, 5000);
+            }
+          });
+        }
+
+        //handle routing
         if (facebookRoutingEnabled) {
           $rootScope.$on('$routeChangeStart', function(event, next, current) {
             if (next.needAuth && !facebookSDK.loggedIn) {

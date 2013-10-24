@@ -1,7 +1,9 @@
 angular.module('facebookUtilsDemo', ['facebookUtils'])
-  .value('facebookRoutingEnabled', true)
-  .value('facebookFirebaseURL', 'https://davidchang.firebaseio.com/credentials')
-  .value('facebookChannelFile', 'channel.html')
+  .value('facebookConfigSettings', {
+    'routingEnabled' : true,
+    'firebaseURL' : 'https://davidchang.firebaseio.com/backUp',
+    'channelFile' : 'channel.html'
+  })
   .config(function($routeProvider) {
     $routeProvider.when('/', {
       templateUrl: 'demo/partials/main.html',
@@ -11,6 +13,7 @@ angular.module('facebookUtilsDemo', ['facebookUtils'])
         $scope.facebookResponse = {};
 
         $scope.$on('fbLoginSuccess', function(name, response) {
+
           $scope.facebookResponse = response;
 
           facebookSDK.api('/me').then(function(response) {

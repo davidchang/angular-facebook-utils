@@ -46,7 +46,8 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" ng-click="showConfigure = false">I'll do this later</button>
-          <button type="button" ng-click="saveConfiguration()" class="btn btn-primary">Save configuration</button>
+          <button ng-hide="reloading" type="button" ng-click="saveConfiguration()" class="btn btn-primary">Save configuration</button>
+          <button ng-show="reloading" type="button" class="btn btn-primary">Reloading...</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

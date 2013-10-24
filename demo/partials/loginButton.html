@@ -10,16 +10,41 @@
 </section>
 
 <section>
-  <h1>Usage</h1>
+  <h1>Non-Firebase Usage:</h1>
   <ol>
     <li><code>bower install angular-facebook-utils</code></li>
     <li>
       <div>Include facebookUtils.min.js:</div>
-      <code>&lt;script src="bower_components/angular-facebook-utils/src/facebookUtils.min.js&gt;&lt;/script&gt;</code>
-      <div>or facebookUtilsFirebase.min.js</div>
-      <code>&lt;script src="bower_components/angular-facebook-utils/src/facebookUtilsFirebase.min.js&gt;&lt;/script&gt;</code>
+      <pre class='marginTop'>&lt;script src="bower_components/angular-facebook-utils/src/facebookUtils.min.js&gt;&lt;/script&gt;</pre>
     </li>
-    <li>Add the <code>facebookUtils</code> module as a dependency of your Angular application</li>
+    <li>
+      <div>Add the <code>facebookUtils</code> module as a dependency of your Angular application and set the appID:</div>
+      <pre class='marginTop'>
+angular.module('yourModule', ['facebookUtils'])
+  .value('facebookConfigSettings', {
+    'appID' : '335763733225618'
+  });</pre>
+    </li>
+    <li>Run your server</li>
+  </ol>
+</section>
+
+<section>
+  <h1>Firebase Usage:</h1>
+  <ol>
+    <li><code>bower install angular-facebook-utils</code></li>
+    <li>
+      <div>Include facebookUtilsFirebase.min.js</div>
+      <pre class='marginTop'>&lt;script src="bower_components/angular-facebook-utils/src/facebookUtilsFirebase.min.js&gt;&lt;/script&gt;</pre>
+    </li>
+    <li>
+      <div>Add the <code>facebookUtils</code> module as a dependency of your Angular application and set your firebase URL:</div>
+      <pre class='marginTop'>
+angular.module('yourModule', ['facebookUtils'])
+  .value('facebookConfigSettings', {
+    'firebaseURL' : 'https://your-account.firebaseio.com/collection-name'
+  });</pre>
+    </li>
     <li>Run your server</li>
     <li>Click the login button and it will give you configuration instructions</li>
   </ol>

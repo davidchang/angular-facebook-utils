@@ -78,7 +78,7 @@ module.exports = function(grunt) {
             removeScriptTypeAttributes:     true,
             removeStyleLinkTypeAttributes:  true
           },
-          module: 'angular-facebook-utils'
+          module: 'facebookUtils'
         }
       },
       'firebase' : {

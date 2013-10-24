@@ -29,15 +29,10 @@ angular.module('facebookUtils')
         });
 
         $scope.$on('fbLogoutSuccess', function() {
-
           $scope.$apply(function() {
             $scope.connected = false;
           });
-
         });
-
-        //if $attrs.appId is empty, fall back to the value facebookAppID
-        facebookSDK.initializeFb($attrs.appId);
       }
     };
   }]);

@@ -2,8 +2,8 @@
 
 angular.module('facebookUtils')
   .directive('facebookLogin', [
-    'angularFire', 'facebookSDK', 'facebookAppID', 'facebookFirebaseURL',
-    function (angularFire, facebookSDK, facebookAppID, facebookFirebaseURL) {
+    'angularFire', 'facebookSDK', 'facebookConfigSettings',
+    function (angularFire, facebookSDK, facebookConfigSettings) {
       return {
         templateUrl: 'src/views/facebookLoginPartialFirebase.html',
         restrict: 'E',
@@ -18,17 +18,14 @@ angular.module('facebookUtils')
             facebookSDK.setChannelFile($attrs.channelFile);
           }
 
-          var needToConfigure = $attrs.showConfigure;
-
           $scope.signInOrConfigure = function() {
-            if (facebookSDK.wasInitialized()) {
+            if (!$attrs.showConfigure) {
               if (!$scope.connected) {
                 facebookSDK.login();
               } else {
                 facebookSDK.logout();
               }
             } else {
-              needToConfigure = true;
               $scope.configureLocation = window.location.origin;
               $scope.showConfigure = true;
             }
@@ -39,20 +36,14 @@ angular.module('facebookUtils')
           });
 
           $scope.$on('fbLogoutSuccess', function() {
-
             $scope.$apply(function() {
               $scope.connected = false;
             });
-
           });
 
-          if (($attrs.appId || facebookAppID) && !needToConfigure) {
+          if ($attrs.showConfigure) {
 
-            facebookSDK.initializeFb($attrs.appId || facebookAppID);
-
-          } else {
-
-            var firebaseUrl = $attrs.firebase || facebookFirebaseURL;
+            var firebaseUrl = $attrs.firebase || facebookConfigSettings.firebaseURL;
 
             if (!firebaseUrl) {
               throw new Error('You\'ll need to either specify a Firebase URL via attribute or application value or provide the app-id attribute on the directive');
@@ -67,19 +58,27 @@ angular.module('facebookUtils')
             angularFire(ref, $scope, 'facebook');
 
             $scope.$watch('facebook', function(val) {
-              if (!needToConfigure && val.appId) {
-                facebookSDK.initializeFb(val.appId);
-              } else if (needToConfigure) {
-                $scope.newAppId = $scope.facebook.appId;
-              }
+              $scope.newAppId = $scope.facebook.appId;
             }, true);
 
             $scope.saveConfiguration = function() {
               if ($scope.newAppId) {
-                $scope.facebook.appId = $scope.newAppId;
+                var originalID = $scope.facebook.appId;
 
-                facebookSDK.initializeFb($scope.newAppId, true);
-                $scope.showConfigure = false;
+                if ($scope.newAppId === originalID) {
+                  if (!$scope.connected) {
+                    facebookSDK.login();
+                  } else {
+                    facebookSDK.logout();
+                  }
+                  $scope.showConfigure = false;
+                } else {
+                  $scope.reloading = true;
+                  $scope.facebook.appId = $scope.newAppId;
+                  setTimeout(function() {
+                    location.reload();
+                  }, 1000);
+                }
               }
             }
 

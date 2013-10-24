@@ -1,53 +1,44 @@
 'use strict';
 
 var application = angular.module('facebookUtils', ['firebase'])
-  .value('facebookFirebaseURL', '')
-  .value('facebookAppID', '')
-  .value('facebookPermissions', '')
-  .value('facebookChannelFile', 'bower_components/angular-facebook-utils/channel.html')
-  .value('facebookRoutingEnabled', false)
-  .value('facebookLoginPath', '/')
+  .value('facebookConfigSettings', {
+    'firebaseURL' : '',
+    'appID' : '',
+    'permissions' : '',
+    'channelFile' : 'bower_components/angular-facebook-utils/channel.html',
+    'routingEnabled' : false,
+    'loginPath' : '/'
+  })
   .run([
-    'facebookRoutingEnabled',
-    'facebookLoginPath',
+    'facebookConfigSettings',
     '$rootScope',
     '$location',
     'facebookSDK',
-    'facebookAppID',
-    'facebookFirebaseURL',
     'angularFireCollection',
     function(
-      facebookRoutingEnabled,
-      facebookLoginPath,
+      facebookConfigSettings,
       $rootScope,
       $location,
       facebookSDK,
-      facebookAppID,
-      facebookFirebaseURL,
       angularFireCollection) {
         //handle initialization
-        if (facebookAppID) {
-          facebookSDK.initializeFb(facebookAppID);
-        } else if (facebookFirebaseURL) {
-          angularFireCollection(new Firebase(facebookFirebaseURL), function(snapshot) {
+        if (facebookConfigSettings.appID) {
+          facebookSDK.initializeFb(facebookConfigSettings.appID);
+        } else if (facebookConfigSettings.firebaseURL) {
+          angularFireCollection(new Firebase(facebookConfigSettings.firebaseURL), function(snapshot) {
             var id = snapshot.val().appId;
             if (id) {
               facebookSDK.initializeFb(id);
-
-              setTimeout(function() {
-                console.log('alert!');
-                facebookSDK.initializeFb('335763733225618');
-              }, 5000);
             }
           });
         }
 
         //handle routing
-        if (facebookRoutingEnabled) {
+        if (facebookConfigSettings.routingEnabled) {
           $rootScope.$on('$routeChangeStart', function(event, next, current) {
             if (next.needAuth && !facebookSDK.loggedIn) {
               // reload the login route
-              $location.path(facebookLoginPath);
+              $location.path(facebookConfigSettings.loginPath);
             }
             /*
             * NOTE:

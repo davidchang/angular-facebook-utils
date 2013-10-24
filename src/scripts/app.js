@@ -1,28 +1,28 @@
 'use strict';
 
 var application = angular.module('facebookUtils', [])
-  .value('facebookAppID', '')
-  .value('facebookPermissions', '')
-  .value('facebookChannelFile', 'bower_components/angular-facebook-utils/channel.html').value('facebookRoutingEnabled', false)
-  .value('facebookRoutingEnabled', false)
-  .value('facebookLoginPath', '/')
+  .value('facebookConfigSettings', {
+    'appID' : '',
+    'permissions' : '',
+    'channelFile' : 'bower_components/angular-facebook-utils/channel.html',
+    'routingEnabled' : false,
+    'loginPath' : '/'
+  })
   .run([
-    'facebookRoutingEnabled',
-    'facebookLoginPath',
+    'facebookConfigSettings',
     '$rootScope',
     '$location',
     'facebookSDK',
     function(
-      facebookRoutingEnabled,
-      facebookLoginPath,
+      facebookConfigSettings,
       $rootScope,
       $location,
       facebookSDK) {
-        if (facebookRoutingEnabled) {
+        if (facebookConfigSettings.routingEnabled) {
           $rootScope.$on('$routeChangeStart', function(event, next, current) {
             if (next.needAuth && !facebookSDK.loggedIn) {
               // reload the login route
-              $location.path(facebookLoginPath);
+              $location.path(facebookConfigSettings.loginPath);
             }
             /*
             * NOTE:

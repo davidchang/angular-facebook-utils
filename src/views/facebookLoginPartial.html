@@ -5,10 +5,10 @@
   </style>
 
   <a ng-click="signInOrConfigure()" data-toggle="modal" data-target="#myModal" class="btn-auth btn-facebook">
-    <span ng-hide="connected">
+    <span ng-hide="connectedToFB">
       Sign in with <b>Facebook</b>
     </span>
-    <span ng-show="connected">
+    <span ng-show="connectedToFB">
       Sign out
     </span>
   </a>

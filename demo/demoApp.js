@@ -7,23 +7,11 @@ angular.module('facebookUtilsDemo', ['facebookUtils'])
   .config(function($routeProvider) {
     $routeProvider.when('/', {
       templateUrl: 'demo/partials/main.html',
-      controller: function($rootScope, $scope) {
-        $scope.facebookResponse = {};
-        $rootScope.$on('fbLoginSuccess', function(name, response) {
-          $scope.facebookResponse = response;
-        });
-        $rootScope.$on('fbLogoutSuccess', function() {
-          $scope.$apply(function() {
-            $scope.facebookResponse = {};
-          });
-        });
-      }
+      controller: angular.noop
     })
     .when('/private', {
       templateUrl: 'demo/partials/private.html',
-      controller: function($scope, $rootScope) {
-        $scope.dataDump = angular.toJson($rootScope.loggedInUser, true);
-      },
+      controller: angular.noop,
       needAuth: true
     })
     .otherwise({
@@ -35,7 +23,6 @@ angular.module('facebookUtilsDemo', ['facebookUtils'])
 
     $rootScope.$on('fbLoginSuccess', function(name, response) {
       facebookSDK.api('/me').then(function(response) {
-        console.log(response);
         $rootScope.loggedInUser = response;
       });
     });

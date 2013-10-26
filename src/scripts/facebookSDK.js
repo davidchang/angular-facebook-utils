@@ -12,14 +12,29 @@ angular.module('facebookUtils')
 
       SDK.initialized = false;
       SDK.loggedIn = false;
+      SDK.cantInitialize = false;
 
-      SDK.prototype.wasInitialized = function() {
-        return this.initialized;
-      };
+      SDK.prototype.getInitializedPromise = function() {
+        var deferred = $q.defer();
+        var $this = this;
+        var check = function() {
+          if($this.initialized) {
+            deferred.resolve();
+          } else {
+            if ($this.cantInitialize) {
+              deferred.reject();
+            } else {
+              setTimeout(check, 50);
+            }
+          }
+        };
+        check();
+        return deferred.promise;
+      }
 
       SDK.prototype.api = function() {
         var deferred = $q.defer();
-        var args = [].splice.call(arguments,0);
+        var args = [].splice.call(arguments, 0);
         args.push(function(response) {
           $rootScope.$apply(function() {
             deferred.resolve(response);
@@ -32,12 +47,15 @@ angular.module('facebookUtils')
       };
 
       SDK.prototype.checkStatus = function() {
+        var $this = this;
         var deferred = $q.defer();
         FB.getLoginStatus(function(response) {
           $rootScope.$apply(function() {
             if (response.status === 'connected') {
+              $this.loggedIn = true;
               deferred.resolve(response);
             } else {
+              $this.loggedIn = false;
               deferred.reject(response);
             }
           });
@@ -57,9 +75,10 @@ angular.module('facebookUtils')
             if (response.authResponse) {
               response.userNotAuthorized = true;
               $rootScope.$broadcast('fbLoginSuccess', response);
-              _self.loggedIn = false;
+              _self.loggedIn = true;
             } else {
               $rootScope.$broadcast('fbLoginFailure');
+              _self.loggedIn = false;
             }
           }, { 'scope' : _self.permissions });
         });
@@ -81,8 +100,6 @@ angular.module('facebookUtils')
         // https://developers.facebook.com/docs/facebook-login/getting-started-web/
         var _self = this;
 
-        _self.initialized = true;
-
         if (!appId && !facebookConfigSettings.appID) {
           throw new Error('You must provide an app-id for the facebook-login directive to work!');
         }
@@ -99,6 +116,8 @@ angular.module('facebookUtils')
           FB.Event.subscribe('auth.authResponseChange', function(response) {
             $rootScope.$broadcast('fbStatusChange', response);
           });
+
+          _self.initialized = true;
 
           _self.checkStatus().then(function(response) {
             $rootScope.$broadcast('fbLoginSuccess', response);

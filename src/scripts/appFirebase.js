@@ -1,27 +1,39 @@
 'use strict';
 
+var defaultSettings = {
+  'firebaseURL'    : '',
+  'appID'          : '',
+  'permissions'    : '',
+  'channelFile'    : 'bower_components/angular-facebook-utils/channel.html',
+  'routingEnabled' : false,
+  'loginPath'      : '/'
+};
+
 var application = angular.module('facebookUtils', ['firebase'])
-  .value('facebookConfigSettings', {
-    'firebaseURL' : '',
-    'appID' : '',
-    'permissions' : '',
-    'channelFile' : 'bower_components/angular-facebook-utils/channel.html',
-    'routingEnabled' : false,
-    'loginPath' : '/',
-    'signedInPath' : '/#/main'
-  })
+  .constant('facebookConfigDefaults', defaultSettings)
+  .value('facebookConfigSettings', defaultSettings)
   .run([
     'facebookConfigSettings',
+    'facebookConfigDefaults',
     '$rootScope',
     '$location',
     'facebookSDK',
     'angularFireCollection',
+    '$route',
     function(
       facebookConfigSettings,
+      facebookConfigDefaults,
       $rootScope,
       $location,
       facebookSDK,
-      angularFireCollection) {
+      angularFireCollection,
+      $route) {
+        for(var key in facebookConfigDefaults) {
+          if (facebookConfigSettings[key] === undefined) {
+            facebookConfigSettings[key] = facebookConfigDefaults[key];
+          }
+        }
+
         //handle initialization
         if (facebookConfigSettings.appID) {
           facebookSDK.initializeFb(facebookConfigSettings.appID);
@@ -30,29 +42,38 @@ var application = angular.module('facebookUtils', ['firebase'])
             var id = snapshot.val().appId;
             if (id) {
               facebookSDK.initializeFb(id);
+            } else {
+              facebookSDK.cantInitialize = true;
             }
           });
+        } else {
+          facebookSDK.cantInitialize = true;
         }
 
         //handle routing
         if (facebookConfigSettings.routingEnabled) {
           $rootScope.$on('$routeChangeStart', function(event, next, current) {
-            if (next.needAuth) {
-              if (facebookSDK.initialized) {
-                facebookSDK.checkStatus().then(angular.noop, function() {
+            if (next && next.$$route && next.$$route.needAuth) {
+              facebookSDK.getInitializedPromise().then(function() {
+
+                if (!facebookSDK.loggedIn) {
                   // reload the login route
                   $location.path(facebookConfigSettings.loginPath);
-                });
-              }
-              else {
-                //you will want to check after facebookSDK initializes, have a queue or something
-              }
+                }
+              });
             }
             /*
             * NOTE:
             * It's important to repeat the control also in the backend,
             * before sending back from the server reserved information.
             */
+          });
+
+          $rootScope.$on('fbLogoutSuccess', function() {
+            if ($route.current.$$route.needAuth) {
+              // reload the login route
+              $location.path(facebookConfigSettings.loginPath);
+            }
           });
         }
       }

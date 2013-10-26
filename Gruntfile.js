@@ -15,6 +15,10 @@ module.exports = function(grunt) {
   ];
 
   grunt.initConfig({
+    watch : {
+      files: ['src/scripts/*', 'src/views/*'],
+      tasks: ['build'],
+    },
     uglify: {
       'build-minify-non-firebase-version' : {
         options: {
@@ -103,6 +107,7 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-angular-templates');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.registerTask('default', ['build']);
   grunt.registerTask('build', ['ngtemplates', 'uglify']);

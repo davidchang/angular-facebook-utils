@@ -1,31 +1,48 @@
 'use strict';
 
 angular.module('facebookUtils')
-  .directive('facebookLogin', ['facebookSDK', function (facebookSDK) {
-    return {
-      templateUrl: 'src/views/facebookLoginPartial.html',
-      restrict: 'E',
-      replace: true,
-      scope: { },
-      link: function postLink($scope, $element, $attrs) {
+  .directive('facebookLogin', [
+    '$rootScope', 'facebookSDK',
+    function ($rootScope, facebookSDK) {
+      return {
+        templateUrl: 'src/views/facebookLoginPartial.html',
+        restrict: 'E',
+        replace: true,
+        scope: false,
+        link: function postLink($scope, $element, $attrs) {
 
-        $scope.signInOrConfigure = function() {
-          if (!$scope.connected) {
-            facebookSDK.login();
-          } else {
-            facebookSDK.logout();
-          }
-        }
+          //if showConfigure attribute is true OR facebook SDK couldn't be initialized (presumably from no App ID)
+          var showConfigure = $attrs.showConfigure || facebookSDK.cantInitialize;
 
-        $scope.$on('fbLoginSuccess', function() {
-          $scope.connected = true;
-        });
+          $scope.signInOrConfigure = function() {
+            if ($rootScope.connectedToFB) {
+              facebookSDK.logout();
+              return;
+            }
 
-        $scope.$on('fbLogoutSuccess', function() {
-          $scope.$apply(function() {
-            $scope.connected = false;
+            if (!showConfigure) {
+              if (!$rootScope.connectedToFB) {
+                facebookSDK.login();
+              } else {
+                facebookSDK.logout();
+              }
+            } else {
+              $scope.configureLocation = window.location.origin;
+              $scope.showConfigure = true;
+            }
+          };
+
+          $scope.$on('fbLoginSuccess', function() {
+            $rootScope.connectedToFB = true;
           });
-        });
-      }
-    };
-  }]);
+
+          $scope.$on('fbLogoutSuccess', function() {
+            $scope.$apply(function() {
+              $rootScope.connectedToFB = false;
+            });
+          });
+
+        }
+      };
+    }
+  ]);

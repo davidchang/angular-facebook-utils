@@ -40,12 +40,12 @@
 
   <facebook-login show-configure='true'></facebook-login>
 
-  <div ng-show='facebookResponse.status == "connected"'>
+  <div ng-show='loggedInUser.name'>
     <h3>Hello, {{loggedInUser.name}}!</h3>
     <h3>If you visit <a href='#/private'>#/private</a>, you will see a dump of your JSON data</h3>
   </div>
 
-  <div ng-hide='facebookResponse.status == "connected"'>
+  <div ng-hide='loggedInUser.name'>
     <h3>Hello, Stranger!</h3>
     <h3>If you visit <a href='#/private'>#/private</a>, you should get redirected back here, since you're not logged in</h3>
   </div>

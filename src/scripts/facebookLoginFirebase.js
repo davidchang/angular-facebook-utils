@@ -2,21 +2,26 @@
 
 angular.module('facebookUtils')
   .directive('facebookLogin', [
-    'angularFire', 'facebookSDK', 'facebookConfigSettings',
-    function (angularFire, facebookSDK, facebookConfigSettings) {
+    '$rootScope', 'angularFire', 'facebookSDK', 'facebookConfigSettings',
+    function ($rootScope, angularFire, facebookSDK, facebookConfigSettings) {
       return {
         templateUrl: 'src/views/facebookLoginPartialFirebase.html',
         restrict: 'E',
         replace: true,
-        scope: { },
+        scope: false,
         link: function postLink($scope, $element, $attrs) {
 
           //if showConfigure attribute is true OR facebook SDK couldn't be initialized (presumably from no App ID)
-          var showConfigure = $attrs.showConfigure || !facebookSDK.wasInitialized;
+          var showConfigure = $attrs.showConfigure || facebookSDK.cantInitialize;
 
           $scope.signInOrConfigure = function() {
+            if ($rootScope.connectedToFB) {
+              facebookSDK.logout();
+              return;
+            }
+
             if (!showConfigure) {
-              if (!$scope.connected) {
+              if (!$rootScope.connectedToFB) {
                 facebookSDK.login();
               } else {
                 facebookSDK.logout();
@@ -28,12 +33,12 @@ angular.module('facebookUtils')
           };
 
           $scope.$on('fbLoginSuccess', function() {
-            $scope.connected = true;
+            $rootScope.connectedToFB = true;
           });
 
           $scope.$on('fbLogoutSuccess', function() {
             $scope.$apply(function() {
-              $scope.connected = false;
+              $rootScope.connectedToFB = false;
             });
           });
 
@@ -62,7 +67,7 @@ angular.module('facebookUtils')
                 var originalID = $scope.facebook.appId;
 
                 if ($scope.newAppId === originalID) {
-                  if (!$scope.connected) {
+                  if (!$rootScope.connectedToFB) {
                     facebookSDK.login();
                   } else {
                     facebookSDK.logout();

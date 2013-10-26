@@ -9,13 +9,6 @@ angular.module('facebookUtils')
       scope: { },
       link: function postLink($scope, $element, $attrs) {
 
-        if ($attrs.permissions) {
-          facebookSDK.setPermissions($attrs.permissions);
-        }
-        if ($attrs.channelFile) {
-          facebookSDK.setChannelFile($attrs.channelFile);
-        }
-
         $scope.signInOrConfigure = function() {
           if (!$scope.connected) {
             facebookSDK.login();

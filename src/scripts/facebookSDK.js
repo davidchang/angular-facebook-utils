@@ -17,18 +17,6 @@ angular.module('facebookUtils')
         return this.initialized;
       };
 
-      SDK.prototype.setPermissions = function(permissions) {
-        if (permissions) {
-          this.permissions = permissions;
-        }
-      };
-
-      SDK.prototype.setChannelFile = function(newFile) {
-        if (newFile) {
-          this.channelFile = newFile;
-        }
-      };
-
       SDK.prototype.api = function() {
         var deferred = $q.defer();
         var args = [].splice.call(arguments,0);

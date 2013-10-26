@@ -7,7 +7,8 @@ var application = angular.module('facebookUtils', ['firebase'])
     'permissions' : '',
     'channelFile' : 'bower_components/angular-facebook-utils/channel.html',
     'routingEnabled' : false,
-    'loginPath' : '/'
+    'loginPath' : '/',
+    'signedInPath' : '/#/main'
   })
   .run([
     'facebookConfigSettings',
@@ -36,9 +37,16 @@ var application = angular.module('facebookUtils', ['firebase'])
         //handle routing
         if (facebookConfigSettings.routingEnabled) {
           $rootScope.$on('$routeChangeStart', function(event, next, current) {
-            if (next.needAuth && !facebookSDK.loggedIn) {
-              // reload the login route
-              $location.path(facebookConfigSettings.loginPath);
+            if (next.needAuth) {
+              if (facebookSDK.initialized) {
+                facebookSDK.checkStatus().then(angular.noop, function() {
+                  // reload the login route
+                  $location.path(facebookConfigSettings.loginPath);
+                });
+              }
+              else {
+                //you will want to check after facebookSDK initializes, have a queue or something
+              }
             }
             /*
             * NOTE:

@@ -7,36 +7,17 @@ angular.module('facebookUtilsDemo', ['facebookUtils'])
   .config(function($routeProvider) {
     $routeProvider.when('/', {
       templateUrl: 'demo/partials/main.html',
-      controller: function ($rootScope, $scope, facebookSDK) {
-        $rootScope.loggedInUser = {};
-
+      controller: function($rootScope, $scope) {
         $scope.facebookResponse = {};
-
-        $scope.$on('fbLoginSuccess', function(name, response) {
-
+        $rootScope.$on('fbLoginSuccess', function(name, response) {
           $scope.facebookResponse = response;
-
-          facebookSDK.api('/me').then(function(response) {
-            $rootScope.loggedInUser = response;
-          });
         });
-
-        $scope.$on('fbLogoutSuccess', function() {
-
+        $rootScope.$on('fbLogoutSuccess', function() {
           $scope.$apply(function() {
             $scope.facebookResponse = {};
           });
-
         });
       }
-    })
-    .when('/loginButton', {
-      templateUrl: 'demo/partials/loginButton.html',
-      controller: function() {}
-    })
-    .when('/routing', {
-      templateUrl: 'demo/partials/routing.html',
-      controller: function() {}
     })
     .when('/private', {
       templateUrl: 'demo/partials/private.html',
@@ -47,5 +28,21 @@ angular.module('facebookUtilsDemo', ['facebookUtils'])
     })
     .otherwise({
       redirectTo: '/'
+    });
+  })
+  .controller('RootCtrl', function($rootScope, $scope, facebookSDK) {
+    $rootScope.loggedInUser = {};
+
+    $rootScope.$on('fbLoginSuccess', function(name, response) {
+      facebookSDK.api('/me').then(function(response) {
+        console.log(response);
+        $rootScope.loggedInUser = response;
+      });
+    });
+
+    $rootScope.$on('fbLogoutSuccess', function() {
+      $scope.$apply(function() {
+        $rootScope.loggedInUser = {};
+      });
     });
   });

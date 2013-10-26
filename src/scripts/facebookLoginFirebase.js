@@ -11,15 +11,11 @@ angular.module('facebookUtils')
         scope: { },
         link: function postLink($scope, $element, $attrs) {
 
-          if ($attrs.permissions) {
-            facebookSDK.setPermissions($attrs.permissions);
-          }
-          if ($attrs.channelFile) {
-            facebookSDK.setChannelFile($attrs.channelFile);
-          }
+          //if showConfigure attribute is true OR facebook SDK couldn't be initialized (presumably from no App ID)
+          var showConfigure = $attrs.showConfigure || !facebookSDK.wasInitialized;
 
           $scope.signInOrConfigure = function() {
-            if (!$attrs.showConfigure) {
+            if (!showConfigure) {
               if (!$scope.connected) {
                 facebookSDK.login();
               } else {
@@ -29,7 +25,7 @@ angular.module('facebookUtils')
               $scope.configureLocation = window.location.origin;
               $scope.showConfigure = true;
             }
-          }
+          };
 
           $scope.$on('fbLoginSuccess', function() {
             $scope.connected = true;
@@ -41,12 +37,12 @@ angular.module('facebookUtils')
             });
           });
 
-          if ($attrs.showConfigure) {
+          if (showConfigure) {
 
-            var firebaseUrl = $attrs.firebase || facebookConfigSettings.firebaseURL;
+            var firebaseUrl = facebookConfigSettings.firebaseURL;
 
             if (!firebaseUrl) {
-              throw new Error('You\'ll need to either specify a Firebase URL via attribute or application value or provide the app-id attribute on the directive');
+              throw new Error('You\'ll need to either specify a Firebase URL or App ID via application value');
             }
 
             var ref = new Firebase(firebaseUrl);

@@ -36,11 +36,16 @@
           <div>
             Now, set your App ID in your code.
           </div>
-          <div><code>
-
-          </code></div>
-
+          <div class="marginTop">
+            <pre>
+angular.module('facebookUtilsDemo', ['facebookUtils'])
+  .value('facebookConfigSettings', {
+    'appID' : 'YourAppID'
+  })
+            </pre>
+          </div>
         </div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-default" ng-click="showConfigure = false">High Five</button>
         </div>

@@ -1,45 +1,48 @@
 'use strict';
 
 angular.module('facebookUtils')
-  .directive('facebookLogin', ['facebookSDK', function (facebookSDK) {
-    return {
-      templateUrl: 'src/views/facebookLoginPartial.html',
-      restrict: 'E',
-      replace: true,
-      scope: { },
-      link: function postLink($scope, $element, $attrs) {
+  .directive('facebookLogin', [
+    '$rootScope', 'facebookSDK',
+    function ($rootScope, facebookSDK) {
+      return {
+        templateUrl: 'src/views/facebookLoginPartial.html',
+        restrict: 'E',
+        replace: true,
+        scope: false,
+        link: function postLink($scope, $element, $attrs) {
 
-        facebookSDK.setPermissions($attrs.permissions);
+          //if showConfigure attribute is true OR facebook SDK couldn't be initialized (presumably from no App ID)
+          var showConfigure = $attrs.showConfigure || facebookSDK.cantInitialize;
 
-        if ($attrs.channelFile) {
-          facebookSDK.setChannelFile($attrs.channelFile);
-        }
+          $scope.signInOrConfigure = function() {
+            if ($rootScope.connectedToFB) {
+              facebookSDK.logout();
+              return;
+            }
 
-        $scope.signInOrConfigure = function() {
-          if (!$scope.connected) {
-            facebookSDK.login();
-          } else {
-            facebookSDK.logout();
-          }
-        }
+            if (!showConfigure) {
+              if (!$rootScope.connectedToFB) {
+                facebookSDK.login();
+              } else {
+                facebookSDK.logout();
+              }
+            } else {
+              $scope.configureLocation = window.location.origin;
+              $scope.showConfigure = true;
+            }
+          };
 
-        $scope.$on('fbLoginSuccess', function() {
-          $scope.connected = true;
-        });
-
-        $scope.$on('fbLogoutSuccess', function() {
-
-          $scope.$apply(function() {
-            $scope.connected = false;
+          $scope.$on('fbLoginSuccess', function() {
+            $rootScope.connectedToFB = true;
           });
 
-        });
+          $scope.$on('fbLogoutSuccess', function() {
+            $scope.$apply(function() {
+              $rootScope.connectedToFB = false;
+            });
+          });
 
-        if (!$attrs.appId) {
-          throw new Error('You must provide an app-id for the facebook-login directive to work!');
         }
-
-        facebookSDK.initializeFb($attrs.appId);
-      }
-    };
-  }]);
+      };
+    }
+  ]);

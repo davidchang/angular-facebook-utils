@@ -11,7 +11,6 @@
 
 <section>
   <h1>Angular Facebook Utils</h1>
-
   <p>
     Implementing Facebook Login in Meteor is as easy as:
   </p>
@@ -34,22 +33,46 @@
 </section>
 
 <section>
-  <h1>Facebook Login Button</h1>
+  <h1>Login Button</h1>
 
   <pre class='marginTop'>&lt;facebook-login&gt;&lt;/facebook-login&gt;</pre>
 
   <facebook-login show-configure='true'></facebook-login>
 
+  <div class='marginTop' ng-show='loggedInUser.name'>
+    <div>Hello, {{loggedInUser.name}}!</div>
+  </div>
+
+  <div class='marginTop' ng-hide='loggedInUser.name'>
+    <div>Hello, Stranger!</div>
+  </div>
+
+</section>
+
+<section>
+  <h1>Authenticated Routing</h1>
+
+  <div><pre>
+angular.module('facebookUtilsDemo', ['facebookUtils'])
+  .config(function($routeProvider) {
+    $routeProvider.when('/', {
+      templateUrl: 'demo/partials/main.html',
+      controller: angular.noop
+    })
+    .when('/private', {
+      templateUrl: 'demo/partials/private.html',
+      controller: angular.noop,
+      needAuth: true
+    })
+  </pre></div>
+
   <div ng-show='loggedInUser.name'>
-    <h3>Hello, {{loggedInUser.name}}!</h3>
-    <h3>If you visit <a href='#/private'>#/private</a>, you will see a dump of your JSON data</h3>
+    <div class='marginTop'>If you visit <a href='#/private'>#/private</a>, you will see a dump of your JSON data</div>
   </div>
 
   <div ng-hide='loggedInUser.name'>
-    <h3>Hello, Stranger!</h3>
-    <h3>If you visit <a href='#/private'>#/private</a>, you should get redirected back here, since you're not logged in</h3>
+    <div class='marginTop'>If you visit <a href='#/private'>#/private</a>, you should get redirected back here, since you're not logged in</div>
   </div>
-
 </section>
 
 <section>

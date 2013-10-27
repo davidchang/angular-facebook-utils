@@ -1,7 +1,7 @@
 angular.module('facebookUtilsDemo', ['facebookUtils'])
   .value('facebookConfigSettings', {
     'routingEnabled' : true,
-    'firebaseURL' : 'https://davidchang.firebaseio.com/backUp',
+    'firebaseURL' : 'https://davidchang.firebaseio.com/backUp3',
     'channelFile' : 'channel.html'
   })
   .config(function($routeProvider) {

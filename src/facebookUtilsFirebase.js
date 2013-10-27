@@ -19,9 +19,9 @@
             facebookSDK.initializeFb(facebookConfigSettings.appID);
         } else if (facebookConfigSettings.firebaseURL) {
             angularFireCollection(new Firebase(facebookConfigSettings.firebaseURL), function(snapshot) {
-                var id = snapshot.val().appId;
-                if (id) {
-                    facebookSDK.initializeFb(id);
+                var val = snapshot.val();
+                if (val && val.appId) {
+                    facebookSDK.initializeFb(val.appId);
                 } else {
                     facebookSDK.cantInitialize = true;
                 }

@@ -1,12 +1,3 @@
-Unfortunate Notice :/
-=======
-
-Please note... there is a glaring bug in my logic for this package that I hope to address before the end of the month (October 2013). Login is inconsistent once the user refreshes the page - I should always be initializing the FB application in the angular-facebook-utils run block, not later in the login button directive. Here are the changes that will be in that 1.0.2 release:
-
-- Fix Inconsistent/Broken Login Logic
-- Introduce non-backwards compatible changes to move to Angular Values for providing configuration like App ID or Firebase URL, as opposed to passing these values as directive element attributes
-- Introduce Routing to enforce Facebook Login to view specified pages
-
 Angular Facebook Utils
 ===================
 

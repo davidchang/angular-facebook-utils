@@ -3,7 +3,7 @@ angular.module('facebookUtilsDemo', ['facebookUtils'])
     'routingEnabled' : true,
     'firebaseURL'    : 'https://davidchang.firebaseio.com/backUp3',
     'channelFile'    : 'channel.html',
-    'appID' : '335763733225618'
+    'appID'          : '629661603722657'
   })
   .config(function($routeProvider) {
     $routeProvider.when('/', {

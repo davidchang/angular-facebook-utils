@@ -17,11 +17,41 @@
       html, body {
         margin: 20px;
       }
-
       body {
-          background: #fafafa;
-          font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-          color: #333;
+        background: #fafafa;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #333;
+      }
+      .margin-left {
+        margin-left: 10px;
+      }
+      header {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        background-color: white;
+        padding: 25px 35px;
+        border-bottom: 1px solid #CCC;
+      }
+      header > section > div {
+        float: left;
+      }
+      header > section > div > div {
+        margin-top: 3px;
+      }
+      ul {
+        list-style-type: none;
+        margin-bottom: 5px;
+        padding-right: 10px;
+        padding-left: 0px;
+      }
+      ul li {
+        display: inline-block;
+        padding-right: 10px;
+      }
+      #pageContainer {
+        margin-top: 90px;
       }
     </style>
 </head>
@@ -34,6 +64,30 @@
       <script src="bower_components/es5-shim/es5-shim.js"></script>
       <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
+
+    <header>
+
+      <section>
+        <ul>
+          <li><a href='#/'>Home</a></li>
+          <li><a href='#/private'>Private</a></li>
+          <li><a target="_blank" href='https://github.com/davidchang/angular-facebook-utils'>Github Repo</a></li>
+          <li><a target="_blank" href="http://davidandsuzi.com">Me</a></li>
+        </ul>
+      </section>
+
+      <section class='clearfix'>
+        <facebook-login show-configure='true'></facebook-login>
+
+        <div class='margin-left' ng-show='loggedInUser.name'>
+          <div>Hello, {{loggedInUser.name}}!</div>
+        </div>
+
+        <div class='margin-left' ng-hide='loggedInUser.name'>
+          <div>Hello, Stranger!</div>
+        </div>
+      </section>
+    </header>
 
     <div id='pageContainer' ng-view></div>
 

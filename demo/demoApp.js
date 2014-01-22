@@ -1,22 +1,21 @@
-angular.module('facebookUtilsDemo', ['facebookUtils'])
-  .value('facebookConfigSettings', {
+angular.module('facebookUtilsDemo', ['facebookUtils', 'ngRoute'])
+  .constant('facebookConfigSettings', {
     'routingEnabled' : true,
-    'firebaseURL'    : 'https://davidchang.firebaseio.com/backUp3',
     'channelFile'    : 'channel.html',
-    'appID'          : '629661603722657'
+    'appID'          : '203909256468237'
   })
   .config(function($routeProvider) {
     $routeProvider.when('/', {
-      templateUrl: 'demo/partials/main.html',
-      controller: angular.noop
+      templateUrl : 'demo/partials/main.html',
+      controller  : angular.noop
     })
     .when('/private', {
-      templateUrl: 'demo/partials/private.html',
-      controller: angular.noop,
-      needAuth: true
+      templateUrl : 'demo/partials/private.html',
+      controller  : angular.noop,
+      needAuth    : true
     })
     .otherwise({
-      redirectTo: '/'
+      redirectTo  : '/'
     });
   })
   .controller('RootCtrl', function($rootScope, $scope, facebookSDK) {

@@ -1,9 +1,10 @@
 'use strict';
 
+// TODO : remove $rootScope, because everything should be able to exist on $scope alone?
 angular.module('facebookUtils')
-  .directive('facebookLogin', [
-    '$rootScope', 'facebookSDK',
-    function ($rootScope, facebookSDK) {
+  .directive('facebookLoginButton', [
+    '$rootScope', 'facebookUser', 'facebookConfigSettings',
+    function ($rootScope, facebookUser, facebookConfigSettings) {
       return {
         templateUrl: 'src/views/facebookLoginPartial.html',
         restrict: 'E',
@@ -11,20 +12,17 @@ angular.module('facebookUtils')
         scope: false,
         link: function postLink($scope, $element, $attrs) {
 
-          //if showConfigure attribute is true OR facebook SDK couldn't be initialized (presumably from no App ID)
-          var showConfigure = $attrs.showConfigure || facebookSDK.cantInitialize;
-
           $scope.signInOrConfigure = function() {
             if ($rootScope.connectedToFB) {
-              facebookSDK.logout();
+              facebookUser.logout();
               return;
             }
 
-            if (!showConfigure) {
+            if (facebookConfigSettings.appID) {
               if (!$rootScope.connectedToFB) {
-                facebookSDK.login();
+                facebookUser.login();
               } else {
-                facebookSDK.logout();
+                facebookUser.logout();
               }
             } else {
               $scope.configureLocation = window.location.origin;

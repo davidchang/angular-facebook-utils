@@ -77,7 +77,7 @@
       </section>
 
       <section class='clearfix'>
-        <facebook-login show-configure='true'></facebook-login>
+        <facebook-login-button></facebook-login-button>
 
         <div class='margin-left' ng-show='loggedInUser.name'>
           <div>Hello, {{loggedInUser.name}}!</div>
@@ -91,11 +91,15 @@
 
     <div id='pageContainer' ng-view></div>
 
-    <script src="//code.angularjs.org/1.0.8/angular.min.js"></script>
-    <script src="//cdn.firebase.com/v0/firebase.js"></script>
-    <script src="//cdn.firebase.com/libs/angularfire/0.3.0/angularfire.min.js"></script>
+    <script src="src/bower_components/angular/angular.js"></script>
+    <script src="src/bower_components/angular-route/angular-route.js"></script>
+    <!-- <script src="src/facebookUtils.js"></script> -->
 
-    <script src="src/facebookUtilsFirebase.min.js"></script>
+    <script src='src/scripts/app.js'></script>
+    <script src='src/views/facebookLoginPartial.js'></script>
+    <script src='src/scripts/facebookSDK.js'></script>
+    <script src='src/scripts/facebookUser.js'></script>
+    <script src='src/scripts/facebookLoginButton.js'></script>
 
     <!-- DEMO -->
     <script src="demo/demoApp.js"></script>

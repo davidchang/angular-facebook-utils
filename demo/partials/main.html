@@ -10,18 +10,8 @@
 </style>
 
 <section>
-  <h1>Angular Facebook Utils</h1>
-  <p>
-    Implementing Facebook Login in Meteor is as easy as:
-  </p>
-  <ol>
-    <li><code>mrt add accounts-ui && mrt add accounts-facebook</code></li>
-    <li class="ng-non-bindable">Add the line <code>{{loginButtons}}</code> to new-app.html</li>
-    <li>Run <code>meteor</code> to start the server</li>
-    <li>Click the login button and it will give you configuration instructions</li>
-  </ol>
-  <p>Meteor can do this, in part, because they own the entire stack. They can save and interpolate values from Mongo.</p>
-  <p>Let's make something as simple in Angular, with Firebase as our backend!</p>
+  <h1>Angular Facebook Utils (1.1)</h1>
+  <p>1.1 is compatible with Angular 1.2.</p>
 </section>
 
 <section>
@@ -32,18 +22,97 @@
   <p><a href='https://github.com/necolas/css3-social-signin-buttons'>https://github.com/necolas/css3-social-signin-buttons</a></p>
 </section>
 
+
 <section>
-  <h1>Login Button</h1>
-
-  <pre class='marginTop'>&lt;facebook-login show-configure="true"&gt;&lt;/facebook-login&gt;</pre>
-
+  <h1>Installation</h1>
+  <ol>
+    <li><code>bower install angular-facebook-utils</code></li>
+    <li>
+      <div>Include facebookUtilsFirebase.min.js</div>
+      <pre class='marginTop'>&lt;script src="bower_components/angular-facebook-utils/src/facebookUtilsFirebase.min.js&gt;&lt;/script&gt;</pre>
+    </li>
+  </ol>
 </section>
 
 <section>
-  <h1>Authenticated Routing</h1>
+  <h1>Login Button - Usage</h1>
+  <ol>
+    <li>
+      <p>Declare 'facebookUtils' as a dependency</p>
+      <pre class='marginTop'>
+angular.module('facebookUtilsDemo', ['facebookUtils'])</pre>
+    </li>
 
-  <div><pre>
+    <li>
+      <p>Add your appID to the facebookConfigSettings constant</p>
+      <p>Secret: You don't actually have to do this right away. If you leave it out, you'll get steps to guide you through registering your app with Facebook</p>
+      <pre class='marginTop'>
 angular.module('facebookUtilsDemo', ['facebookUtils'])
+  .constant('facebookConfigSettings', {
+    'appID' : '314159265358979323846264338'
+  });</pre>
+    </li>
+
+    <li>
+      <p>Use the Login Button directive</p>
+      <pre class='marginTop'>&lt;facebook-login-button&gt;&lt;/facebook-login-button&gt;</pre>
+    </li>
+
+    <li>
+      <p>Listen to fbLoginSuccess events</p>
+      <pre class='marginTop'>
+$rootScope.$on('fbLoginSuccess', function(name, response) {
+  facebookUser.then(function(user) {
+    user.api('/me').then(function(response) {
+      $rootScope.loggedInUser = response;
+    });
+  });
+});
+
+$rootScope.$on('fbLogoutSuccess', function() {
+  $scope.$apply(function() {
+    $rootScope.loggedInUser = {};
+  });
+});</pre>
+    </li>
+  </ol>
+
+</section>
+
+
+<section>
+  <h1>Authenticated Routing - Usage</h1>
+
+
+  <div ng-show='loggedInUser.name'>
+    <div class='marginTop'>If you visit <a href='#/private'>#/private</a>, you will see a dump of your JSON data</div>
+  </div>
+
+  <div ng-hide='loggedInUser.name'>
+    <div class='marginTop'>If you visit <a href='#/private'>#/private</a>, you should get redirected back here, since you're not logged in</div>
+  </div>
+
+  <ol>
+    <li>
+      <p>Declare 'facebookUtils' (and 'ngRoute', since you want routing) as a dependency</p>
+      <pre class='marginTop'>
+angular.module('facebookUtilsDemo', ['facebookUtils', 'ngRoute'])</pre>
+    </li>
+
+    <li>
+      <p>Add your appID and routingEnabled to the facebookConfigSettings constant</p>
+      <pre class='marginTop'>
+angular.module('facebookUtilsDemo', ['facebookUtils', 'ngRoute'])
+  .constant('facebookConfigSettings', {
+    'appID' : '314159265358979323846264338',
+    'routingEnabled' : true
+  });</pre>
+    </li>
+
+    <li>
+      <p>Do your routing as normal, but add the needAuth: true key to protected routes</p>
+      <pre>
+angular.module('facebookUtilsDemo', ['facebookUtils', 'ngRoute'])
   .config(function($routeProvider) {
     $routeProvider.when('/', {
       templateUrl: 'demo/partials/main.html',
@@ -54,67 +123,11 @@ angular.module('facebookUtilsDemo', ['facebookUtils'])
       controller: angular.noop,
       needAuth: true
     })
-  </pre></div>
-
-  <div ng-show='loggedInUser.name'>
-    <div class='marginTop'>If you visit <a href='#/private'>#/private</a>, you will see a dump of your JSON data</div>
-  </div>
-
-  <div ng-hide='loggedInUser.name'>
-    <div class='marginTop'>If you visit <a href='#/private'>#/private</a>, you should get redirected back here, since you're not logged in</div>
-  </div>
-</section>
-
-<section>
-  <h1>Code</h1>
-  <a href='https://github.com/davidchang/angular-facebook-utils'>https://github.com/davidchang/angular-facebook-utils</a>
-</section>
-
-<section>
-  <h1>Non-Firebase Usage:</h1>
-  <ol>
-    <li><code>bower install angular-facebook-utils</code></li>
-    <li>
-      <div>Include facebookUtils.min.js:</div>
-      <pre class='marginTop'>&lt;script src="bower_components/angular-facebook-utils/src/facebookUtils.min.js&gt;&lt;/script&gt;</pre>
+      </pre>
     </li>
-    <li>
-      <div>Add the <code>facebookUtils</code> module as a dependency of your Angular application and set your appID:</div>
-      <pre class='marginTop'>
-angular.module('yourModule', ['facebookUtils'])
-  .value('facebookConfigSettings', {
-    'appID' : '335763733225618'
-  });</pre>
-    </li>
-    <li>
-      Add <code>&lt;facebook-login&gt;&lt;/facebook-login&gt;</code> somewhere in your code
-    </li>
-    <li>Run your server</li>
+
   </ol>
-</section>
 
-<section>
-  <h1>Firebase Usage</h1>
-  <ol>
-    <li><code>bower install angular-facebook-utils</code></li>
-    <li>
-      <div>Include facebookUtilsFirebase.min.js</div>
-      <pre class='marginTop'>&lt;script src="bower_components/angular-facebook-utils/src/facebookUtilsFirebase.min.js&gt;&lt;/script&gt;</pre>
-    </li>
-    <li>
-      <div>Add the <code>facebookUtils</code> module as a dependency of your Angular application and set your firebase URL:</div>
-      <pre class='marginTop'>
-angular.module('yourModule', ['facebookUtils'])
-  .value('facebookConfigSettings', {
-    'firebaseURL' : 'https://your-account.firebaseio.com/collection-name'
-  });</pre>
-    </li>
-    <li>Run your server</li>
-    <li>
-      Add <code>&lt;facebook-login&gt;&lt;/facebook-login&gt;</code> somewhere in your code
-    </li>
-    <li>Click the login button and it will give you configuration instructions</li>
-  </ol>
 </section>
 
 <section>
@@ -125,14 +138,9 @@ angular.module('yourModule', ['facebookUtils'])
     </thead>
     <tbody>
       <tr>
-        <td>firebaseURL</td>
-        <td>''</td>
-        <td>Your firebase URL</td>
-      </tr>
-      <tr>
         <td>appID</td>
         <td>''</td>
-        <td>Your Facebook ID (required if Firebase is disabled)</td>
+        <td>Your Facebook ID (if empty, you will see a help modal instead)</td>
       </tr>
       <tr>
         <td>permissions</td>
@@ -158,45 +166,6 @@ angular.module('yourModule', ['facebookUtils'])
       </tr>
     </tbody>
   </table>
-  <div>Note: If you want to show the configuration modal to see the instructions or change your appID, you can add the show-configure attribute to your facebook-login attribute, like so: <code>&lt;facebook-login show-configure='true'&gt;&lt;facebook-login&gt;</code></div>
-</section>
-
-
-<section>
-  <h1>Example Code</h1>
-  <section>
-    <div>This example will:
-      <ul>
-        <li>use the specified Firebase URL</li>
-        <li>request user_photos and user_likes permissions</li>
-        <li>use the channel file at channel.html</li>
-        <li>pop up a configuration modal that will allow you to change your app ID</li>
-      </ul>
-      It will also enforce Facebook authentication for your routes with <code>'needAuth' : true</code> in their route data and redirect back to loginPath if they are trying to view a private page and are not logged in.
-    </div>
-    <pre class='marginTop'>
-angular.module('yourModule', ['facebookUtils'])
-  .value('facebookConfigSettings', {
-    'firebaseURL' : 'https://your-account.firebaseio.com/collection-name',
-    'permissions' : 'user_photos,user_likes',
-    'showConfigure' : true,
-    'channelFile' : 'channel.html',
-    'routingEnabled' : true,
-    'loginPath' : '/'
-  })
-  .config(function($routeProvider) {
-    $routeProvider.when('/', {
-      templateUrl: 'demo/partials/login.html',
-      controller: 'loginCtrl'
-    })
-    .when('/private', {
-      templateUrl: 'demo/partials/private.html',
-      controller: 'privateCtrl',
-      needAuth: true
-    })
-    .otherwise({ redirectTo: '/' });
-  });</pre>
-  </section>
 </section>
 
 <section>
@@ -229,4 +198,9 @@ angular.module('yourModule', ['facebookUtils'])
       </tr>
     </tbody>
   </table>
+</section>
+
+<section>
+  <h1>Me</h1>
+  <a href='davidandsuzi.com'>davidandsuzi.com</a>
 </section>

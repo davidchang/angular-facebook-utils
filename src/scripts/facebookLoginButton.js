@@ -1,10 +1,9 @@
 'use strict';
 
-// TODO : remove $rootScope, because everything should be able to exist on $scope alone?
 angular.module('facebookUtils')
   .directive('facebookLoginButton', [
-    '$rootScope', 'facebookUser', 'facebookConfigSettings',
-    function ($rootScope, facebookUser, facebookConfigSettings) {
+    'facebookUser',
+    function (facebookUser) {
       return {
         templateUrl: 'src/views/facebookLoginPartial.html',
         restrict: 'E',
@@ -12,32 +11,34 @@ angular.module('facebookUtils')
         scope: false,
         link: function postLink($scope, $element, $attrs) {
 
-          $scope.signInOrConfigure = function() {
-            if ($rootScope.connectedToFB) {
-              facebookUser.logout();
-              return;
-            }
+          facebookUser.then(function(user) {
 
-            if (facebookConfigSettings.appID) {
-              if (!$rootScope.connectedToFB) {
-                facebookUser.login();
-              } else {
-                facebookUser.logout();
-              }
-            } else {
+            $scope.signInOrConfigure = function() {
+              var action = !user.loggedIn ? 'login' : 'logout';
+              user[action]();
+            };
+
+            var syncLoggedIn = function() {
+              $scope.connectedToFB = user.loggedIn;
+            };
+
+            $scope.$on('fbLoginSuccess', syncLoggedIn);
+
+            $scope.$on('fbLogoutSuccess', function() {
+              $scope.$apply(function() {
+                syncLoggedIn();
+              });
+            });
+
+            syncLoggedIn();
+
+          }, function() {
+
+            $scope.signInOrConfigure = function() {
               $scope.configureLocation = window.location.origin;
               $scope.showConfigure = true;
-            }
-          };
+            };
 
-          $scope.$on('fbLoginSuccess', function() {
-            $rootScope.connectedToFB = true;
-          });
-
-          $scope.$on('fbLogoutSuccess', function() {
-            $scope.$apply(function() {
-              $rootScope.connectedToFB = false;
-            });
           });
 
         }

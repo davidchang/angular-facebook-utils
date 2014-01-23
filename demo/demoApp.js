@@ -18,12 +18,14 @@ angular.module('facebookUtilsDemo', ['facebookUtils', 'ngRoute'])
       redirectTo  : '/'
     });
   })
-  .controller('RootCtrl', function($rootScope, $scope, facebookSDK) {
+  .controller('RootCtrl', function($rootScope, $scope, facebookUser) {
     $rootScope.loggedInUser = {};
 
     $rootScope.$on('fbLoginSuccess', function(name, response) {
-      facebookSDK.api('/me').then(function(response) {
-        $rootScope.loggedInUser = response;
+      facebookUser.then(function(user) {
+        user.api('/me').then(function(response) {
+          $rootScope.loggedInUser = response;
+        });
       });
     });
 

@@ -11,27 +11,19 @@ var defaultSettings = {
 var application = angular.module('facebookUtils', ['ngRoute'])
   .constant('facebookConfigDefaults', defaultSettings)
   .constant('facebookConfigSettings', defaultSettings)
-  .config([
-    'facebookConfigSettings', 'facebookConfigDefaults', '$provide',
-    function(facebookConfigSettings, facebookConfigDefaults, $provide) {
-      for(var key in facebookConfigDefaults) {
-        if (facebookConfigSettings[key] === undefined) {
-          facebookConfigSettings[key] = facebookConfigDefaults[key];
-        }
-      }
-    }])
-  .run(['facebookConfigSettings', 'facebookConfigDefaults', '$rootScope', '$location', 'facebookSDK',
-    function(facebookConfigSettings, facebookConfigDefaults, $rootScope, $location, facebookSDK, $route) {
+  .run([
+    'facebookConfigSettings', 'facebookConfigDefaults', '$rootScope', '$location', 'facebookUser', '$route',
+    function(facebookConfigSettings, facebookConfigDefaults, $rootScope, $location, facebookUser, $route) {
 
       //handle routing
       if (facebookConfigSettings.routingEnabled) {
         $rootScope.$on('$routeChangeStart', function(event, next, current) {
-          if (next && next.$$route && next.$$route.needAuth) {
-            facebookSDK.then(function() {
 
-              if (!facebookSDK.loggedIn) {
+          if (next && next.$$route && next.$$route.needAuth) {
+            facebookUser.then(function(user) {
+              if (!user.loggedIn) {
                 // reload the login route
-                $location.path(facebookConfigSettings.loginPath);
+                $location.path(facebookConfigSettings.loginPath || facebookConfigDefaults.loginPath);
               }
             });
           }
@@ -43,9 +35,10 @@ var application = angular.module('facebookUtils', ['ngRoute'])
         });
 
         $rootScope.$on('fbLogoutSuccess', function() {
+
           if ($route.current.$$route.needAuth) {
             // reload the login route
-            $location.path(facebookConfigSettings.loginPath);
+            $location.path(facebookConfigSettings.loginPath || facebookConfigDefaults.loginPath);
           }
         });
       }

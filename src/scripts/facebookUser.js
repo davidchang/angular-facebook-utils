@@ -1,14 +1,31 @@
 'use strict';
 
-// TODO: Move to be a provider that waits on facebookSDK to load, make sure to reject if facebookSDK can't load
 angular.module('facebookUtils')
   .service('facebookUser', [
-    '$window', '$rootScope', '$q', 'facebookConfigSettings', 'facebookSDK',
-    function($window, $rootScope, $q, facebookConfigSettings, facebookSDK) {
+    '$window', '$rootScope', '$q', 'facebookConfigDefaults', 'facebookConfigSettings', 'facebookSDK',
+    function($window, $rootScope, $q, facebookConfigDefaults, facebookConfigSettings, facebookSDK) {
 
       var FacebookUser = function(){};
 
-      FacebookUser.loggedIn = false;
+      var checkStatus = function() {
+        var deferred = $q.defer();
+        FB.getLoginStatus(function(response) {
+          $rootScope.$apply(function() {
+            if (response.status === 'connected') {
+              user.loggedIn = true;
+              $rootScope.$broadcast('fbLoginSuccess', response);
+              deferred.resolve(response);
+            } else {
+              user.loggedIn = false;
+              deferred.reject(response);
+            }
+          });
+        }, true);
+
+        return deferred.promise;
+      };
+
+      FacebookUser.prototype.loggedIn = false;
 
       FacebookUser.prototype.api = function() {
         var deferred = $q.defer();
@@ -23,56 +40,42 @@ angular.module('facebookUtils')
         return deferred.promise;
       };
 
-      FacebookUser.prototype.checkStatus = function() {
-        var $this = this;
-        var deferred = $q.defer();
-        FB.getLoginStatus(function(response) {
-          $rootScope.$apply(function() {
-            if (response.status === 'connected') {
-              $this.loggedIn = true;
-              deferred.resolve(response);
-            } else {
-              $this.loggedIn = false;
-              deferred.reject(response);
-            }
-          });
-        }, true);
-
-        return deferred.promise;
-      };
-
       FacebookUser.prototype.login = function() {
         var _self = this;
-
-        _self.checkStatus().then(function(response) {
-          $rootScope.$broadcast('fbLoginSuccess', response);
-          _self.loggedIn = true;
-        }, function() {
-          FB.login(function(response) {
-            if (response.authResponse) {
-              response.userNotAuthorized = true;
-              $rootScope.$broadcast('fbLoginSuccess', response);
-              _self.loggedIn = true;
-            } else {
-              $rootScope.$broadcast('fbLoginFailure');
-              _self.loggedIn = false;
-            }
-          }, { 'scope' : facebookConfigSettings.permissions });
-        });
+        FB.login(function(response) {
+          if (response.authResponse) {
+            response.userNotAuthorized = true;
+            _self.loggedIn = true;
+            $rootScope.$broadcast('fbLoginSuccess', response);
+          } else {
+            _self.loggedIn = false;
+            $rootScope.$broadcast('fbLoginFailure');
+          }
+        }, { 'scope' : facebookConfigSettings.permissions || facebookConfigDefaults.permissions });
       };
 
       FacebookUser.prototype.logout = function() {
         var _self = this;
         FB.logout(function(response) {
           if (response) {
-            $rootScope.$broadcast('fbLogoutSuccess');
             _self.loggedIn = false;
+            $rootScope.$broadcast('fbLogoutSuccess');
           } else {
             $rootScope.$broadcast('fbLogoutFailure');
           }
         });
       };
 
-      return new FacebookUser();
+      var user = new FacebookUser();
+
+      var deferred = $q.defer();
+      facebookSDK.then(function() {
+        checkStatus()['finally'](function() {
+          deferred.resolve(user);
+        });
+      }, function() {
+        deferred.reject('SDK failed to load because your app ID wasn\'t set');
+      });
+      return deferred.promise;
     }
   ]);

@@ -19,8 +19,8 @@ angular.module('facebookUtils')
     }
 
     this.$get = [
-      '$q', 'facebookConfigSettings', '$timeout',
-      function($q, facebookConfigSettings, $timeout) {
+      '$q', 'facebookConfigDefaults', 'facebookConfigSettings', '$timeout',
+      function($q, facebookConfigDefaults, facebookConfigSettings, $timeout) {
         var deferred = $q.defer();
 
         if (!facebookConfigSettings.appID) {
@@ -29,7 +29,7 @@ angular.module('facebookUtils')
           loadScript(document, function(callback) {
             FB.init({
               appId      : facebookConfigSettings.appID, // App ID
-              channelUrl : facebookConfigSettings.channelFile, // Channel File
+              channelUrl : facebookConfigSettings.channelFile || facebookConfigDefaults.channelFile, // Channel File
               status     : true, // check login status
               cookie     : true // enable cookies to allow the server to access the session
             });

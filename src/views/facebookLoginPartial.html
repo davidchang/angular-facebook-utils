@@ -24,22 +24,22 @@
         </div>
         <div class="modal-body">
           <div>
-            First, you'll need to register your app on Facebook. Follow these steps:
+            First, you'll need to register your app on Facebook. Follow these steps (as of Jan 2014):
           </div>
           <ol class="marginTop">
             <li>Visit <a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a></li>
             <li>Create New App (Only a name is required.)</li>
-            <li>Set "Sandbox Mode" to "Disabled"</li>
-            <li>Under "Select how your app integrates with Facebook", expand "Website with Facebook Login".</li>
-            <li>Set Site URL to: <span ng-bind="configureLocation">http://localhost:3000/</span></li>
+            <li>Click "Settings"</li>
+            <li>Click "Add Platform", then select "Website" since you are creating a web app.</li>
+            <li>Set Site URL to: <span ng-bind="configureLocation">http://localhost:3000/</span>. You shouldn't have to set App Domains.</li>
           </ol>
           <div>
-            Now, set your App ID in your code.
+            Now, just set your App ID in your code and you're good to go!
           </div>
           <div class="marginTop">
             <pre>
 angular.module('facebookUtilsDemo', ['facebookUtils'])
-  .value('facebookConfigSettings', {
+  .constant('facebookConfigSettings', {
     'appID' : 'YourAppID'
   })
             </pre>

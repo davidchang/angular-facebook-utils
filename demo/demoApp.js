@@ -2,7 +2,7 @@ angular.module('facebookUtilsDemo', ['facebookUtils', 'ngRoute'])
   .constant('facebookConfigSettings', {
     'routingEnabled' : true,
     'channelFile'    : 'channel.html',
-    'appID'          : '203909256468237'
+    'appID'          : '629661603722657'
   })
   .config(function($routeProvider) {
     $routeProvider.when('/', {

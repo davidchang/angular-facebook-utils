@@ -3,15 +3,14 @@ Angular Facebook Utils
 
 Visit the nicer page at [http://davidchang.github.io/angular-facebook-utils/](http://davidchang.github.io/angular-facebook-utils/) for more details.
 
-Implementing Facebook Login in Meteor is as easy as:
+Installation and Usage
+----------------------
 
-1. mrt add accounts-ui && mrt add accounts-facebook
-2. Add the line {{loginButtons}} to new-app.html
-3. Run meteor to start the server
-4. Click the login button and it will give you configuration instructions
+1. ``bower install angular-facebook-utils``
+2. ``<script src="bower_components/angular-facebook-utils/src/facebookUtils.min.js"></script>``
+3. ``angular.module('facebookUtilsDemo', ['facebookUtils']);``
+4. ``<facebook-login-button></facebook-login-button>``
 
-
-Let's make something as simple in Angular, with Firebase as our backend!
 
 Due Credit
 ----------
@@ -24,16 +23,6 @@ I took code and ideas from these 3 places, so they deserve more obvious credit:
 
 [https://github.com/necolas/css3-social-signin-buttons](https://github.com/necolas/css3-social-signin-buttons)
 
-Usage
------
-
-1. ``bower install angular-facebook-utils``
-2. Add the facebookUtils module as a dependency of your Angular application
-3. Include facebookUtils.min.js or facebookUtilsFirebase.min.js.
-4. Run your server
-5. Click the login button and it will give you configuration instructions
-
-Visit the nicer page at [http://davidchang.github.io/angular-facebook-utils/](http://davidchang.github.io/angular-facebook-utils/) for more details.
 
 Me
 --

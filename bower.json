@@ -1,6 +1,6 @@
 {
   "name": "angularFacebookUtils",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -10,10 +10,10 @@
     "src/views/*.html"
   ],
   "dependencies": {
-    "angular": "~1.0.8"
+    "angular": "~1.2.0",
+    "angular-route": "~1.2.9"
   },
   "main": [
-    "src/styles/*",
     "src/*.js"
   ]
 }

@@ -25,6 +25,9 @@
       .margin-left {
         margin-left: 10px;
       }
+      .margin-top {
+        margin-top: 10px;
+      }
       header {
         position: fixed;
         top: 0px;
@@ -48,10 +51,10 @@
       }
       ul li {
         display: inline-block;
-        padding-right: 10px;
+        padding-right: 20px;
       }
       #pageContainer {
-        margin-top: 90px;
+        margin-top: 100px;
       }
     </style>
 </head>
@@ -70,14 +73,13 @@
       <section>
         <ul>
           <li><a href='#/'>Home</a></li>
-          <li><a href='#/private'>Private</a></li>
-          <li><a target="_blank" href='https://github.com/davidchang/angular-facebook-utils'>Github Repo</a></li>
-          <li><a target="_blank" href="http://davidandsuzi.com">Me</a></li>
+          <li><a href='#/private'>Private JSON Dump</a></li>
+          <li><a target="_blank" href='https://github.com/davidchang/angular-facebook-utils'>Code on Github</a></li>
         </ul>
       </section>
 
       <section class='clearfix'>
-        <facebook-login show-configure='true'></facebook-login>
+        <facebook-login-button></facebook-login-button>
 
         <div class='margin-left' ng-show='loggedInUser.name'>
           <div>Hello, {{loggedInUser.name}}!</div>
@@ -91,11 +93,9 @@
 
     <div id='pageContainer' ng-view></div>
 
-    <script src="//code.angularjs.org/1.0.8/angular.min.js"></script>
-    <script src="//cdn.firebase.com/v0/firebase.js"></script>
-    <script src="//cdn.firebase.com/libs/angularfire/0.3.0/angularfire.min.js"></script>
-
-    <script src="src/facebookUtilsFirebase.min.js"></script>
+    <script src="src/bower_components/angular/angular.min.js"></script>
+    <script src="src/bower_components/angular-route/angular-route.min.js"></script>
+    <script src="src/facebookUtils.min.js"></script>
 
     <!-- DEMO -->
     <script src="demo/demoApp.js"></script>

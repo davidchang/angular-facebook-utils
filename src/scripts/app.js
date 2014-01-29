@@ -8,60 +8,39 @@ var defaultSettings = {
   'loginPath'      : '/'
 };
 
-var application = angular.module('facebookUtils', [])
+var application = angular.module('facebookUtils', ['ngRoute'])
   .constant('facebookConfigDefaults', defaultSettings)
-  .value('facebookConfigSettings', defaultSettings)
+  .constant('facebookConfigSettings', defaultSettings)
   .run([
-    'facebookConfigSettings',
-    'facebookConfigDefaults',
-    '$rootScope',
-    '$location',
-    'facebookSDK',
-    function(
-      facebookConfigSettings,
-      facebookConfigDefaults,
-      $rootScope,
-      $location,
-      facebookSDK,
-      $route) {
-        for(var key in facebookConfigDefaults) {
-          if (facebookConfigSettings[key] === undefined) {
-            facebookConfigSettings[key] = facebookConfigDefaults[key];
+    'facebookConfigSettings', 'facebookConfigDefaults', '$rootScope', '$location', 'facebookUser', '$route',
+    function(facebookConfigSettings, facebookConfigDefaults, $rootScope, $location, facebookUser, $route) {
+
+      //handle routing
+      if (facebookConfigSettings.routingEnabled) {
+        $rootScope.$on('$routeChangeStart', function(event, next, current) {
+
+          if (next && next.$$route && next.$$route.needAuth) {
+            facebookUser.then(function(user) {
+              if (!user.loggedIn) {
+                // reload the login route
+                $location.path(facebookConfigSettings.loginPath || facebookConfigDefaults.loginPath);
+              }
+            });
           }
-        }
+          /*
+          * NOTE:
+          * It's important to repeat the control also in the backend,
+          * before sending back from the server reserved information.
+          */
+        });
 
-        //handle initialization
-        if (facebookConfigSettings.appID) {
-          facebookSDK.initializeFb(facebookConfigSettings.appID);
-        } else {
-          facebookSDK.cantInitialize = true;
-        }
+        $rootScope.$on('fbLogoutSuccess', function() {
 
-        //handle routing
-        if (facebookConfigSettings.routingEnabled) {
-          $rootScope.$on('$routeChangeStart', function(event, next, current) {
-            if (next && next.$$route && next.$$route.needAuth) {
-              facebookSDK.getInitializedPromise().then(function() {
-
-                if (!facebookSDK.loggedIn) {
-                  // reload the login route
-                  $location.path(facebookConfigSettings.loginPath);
-                }
-              });
-            }
-            /*
-            * NOTE:
-            * It's important to repeat the control also in the backend,
-            * before sending back from the server reserved information.
-            */
-          });
-
-          $rootScope.$on('fbLogoutSuccess', function() {
-            if ($route.current.$$route.needAuth) {
-              // reload the login route
-              $location.path(facebookConfigSettings.loginPath);
-            }
-          });
-        }
+          if ($route.current.$$route.needAuth) {
+            // reload the login route
+            $location.path(facebookConfigSettings.loginPath || facebookConfigDefaults.loginPath);
+          }
+        });
       }
+    }
   ]);
